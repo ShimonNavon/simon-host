@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sea: #0f2d4a;
+  --color-sea-deep: #0a2138;
+  --color-paper: #faf8f4;
+  --color-jaffa: #e8590c;
+  --color-jaffa-dark: #c94a08;
+  --color-sky: #e3eef7;
+  --color-ink: #22303c;
+  --color-ink-soft: #4c5d6d;
+
+  --font-display: "Suez One", serif;
+  --font-body: "Heebo", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-jaffa);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-jaffa);
+  color: #fff;
+}
+
+/* ── Marker highlight on the price ────────────────────────────── */
+.marker {
+  position: relative;
+  white-space: nowrap;
+  z-index: 0;
+}
+.marker::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-inline: -0.12em;
+  bottom: 0.05em;
+  height: 0.5em;
+  background: var(--color-jaffa);
+  opacity: 0.35;
+  transform: skewX(-8deg);
+}
+
+/* ── Hero entrance ────────────────────────────────────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.15s; }
+.rise-3 { animation-delay: 0.25s; }
+.rise-4 { animation-delay: 0.4s; }
+
+/* ── Browser demo word swap ───────────────────────────────────── */
+@keyframes wordIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.word-in {
+  animation: wordIn 0.45s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise,
+  .rise-1,
+  .rise-2,
+  .rise-3,
+  .rise-4,
+  .word-in {
+    animation: none;
+  }
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-block;
+  background: var(--color-jaffa);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.8rem 2rem;
+  border-radius: 10px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.btn-primary:hover {
+  background: var(--color-jaffa-dark);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-block;
+  color: var(--color-sea);
+  font-weight: 700;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  border: 2px solid var(--color-sea);
+  transition: background 0.15s ease;
+}
+.btn-ghost:hover {
+  background: var(--color-sky);
+}
+
+/* ── Cards ────────────────────────────────────────────────────── */
+.feature-card {
+  background: #fff;
+  border: 1px solid #e8e2d6;
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(15, 45, 74, 0.08);
+}
+
+/* ── Form ─────────────────────────────────────────────────────── */
+.field {
+  width: 100%;
+  background: #fff;
+  border: 1.5px solid #d7cfc0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.15s ease;
+}
+.field:focus {
+  border-color: var(--color-jaffa);
+  outline: none;
+}
+.field::placeholder {
+  color: #9aa8b4;
+}
