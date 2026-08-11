@@ -1,5 +1,5 @@
 import BrowserDemo from "./components/BrowserDemo";
-import LeadForm from "./components/LeadForm";
+import WhatsAppCTA from "./components/WhatsAppCTA";
 
 const FEATURES = [
   { emoji: "🎨", title: "עיצוב אישי", text: "אתר שנבנה סביב העסק שלך — לא תבנית גנרית שנראית כמו של כולם." },
@@ -135,14 +135,14 @@ export default function App() {
           </div>
         </section>
 
-        {/* ── Lead form ── */}
+        {/* ── WhatsApp CTA ── */}
         <section id="contact" className="py-20 scroll-mt-16">
           <div className="max-w-2xl mx-auto px-5">
             <h2 className="text-3xl sm:text-4xl text-sea mb-3">רוצה אתר? דברו איתי.</h2>
             <p className="text-ink-soft mb-8">
-              השאירו שם וטלפון ואני חוזר אליכם תוך יום עסקים לשיחת היכרות קצרה — בלי לחץ ובלי מכירות.
+              הכי פשוט בוואטסאפ — כותבים לי מה העסק שלך עושה, ואני עונה עוד היום לשיחת היכרות קצרה. בלי לחץ ובלי מכירות.
             </p>
-            <LeadForm />
+            <WhatsAppCTA />
           </div>
         </section>
       </main>
