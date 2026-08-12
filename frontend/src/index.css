@@ -139,33 +139,73 @@ h3 {
   background: var(--color-sky);
 }
 
-/* ── Cards ────────────────────────────────────────────────────── */
-.feature-card {
+/* ── Involvement bar ──────────────────────────────────────────────
+   The site's one recurring device. Solid orange is my share of the
+   work, hatched is yours. The white base keeps it legible on the
+   paper sections and on the deep navy one alike. */
+.involve-track {
+  display: flex;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(15, 45, 74, 0.18);
+}
+.involve-mine {
+  background: var(--color-jaffa);
+}
+.involve-yours {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(15, 45, 74, 0.55) 0 2px,
+    transparent 2px 6px
+  );
+}
+
+/* ── Ladder stops (the hero chooser) ──────────────────────────── */
+.ladder-stop {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border: 1px solid #e8e2d6;
   border-radius: 14px;
-  padding: 1.5rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 1.25rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
-.feature-card:hover {
+.ladder-stop:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(15, 45, 74, 0.08);
+  border-color: var(--color-jaffa);
+  box-shadow: 0 12px 28px rgba(15, 45, 74, 0.1);
 }
 
-/* ── Form ─────────────────────────────────────────────────────── */
-.field {
-  width: 100%;
+/* ── FAQ ──────────────────────────────────────────────────────── */
+.faq-item {
   background: #fff;
-  border: 1.5px solid #d7cfc0;
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: border-color 0.15s ease;
+  border: 1px solid #e8e2d6;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
 }
-.field:focus {
-  border-color: var(--color-jaffa);
-  outline: none;
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--color-sea);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
-.field::placeholder {
-  color: #9aa8b4;
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item summary::after {
+  content: "+";
+  font-family: var(--font-display);
+  color: var(--color-jaffa);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.faq-item[open] summary::after {
+  content: "−";
 }
