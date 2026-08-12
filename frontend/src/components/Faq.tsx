@@ -1,4 +1,5 @@
-const QUESTIONS = [
+/** Exported so the FAQPage structured data is built from the same source. */
+export const QUESTIONS = [
   {
     q: "ואם אני רוצה לעזוב?",
     a: "הקוד שלך, הדאטה שלך, הדומיין שלך. אני נותן לך את הכל ועוזר להעביר לאן שתרצה. בלי קנסות ובלי לעכב אותך.",
