@@ -26,9 +26,7 @@ function service() {
     name: SITE_NAME,
     url: SITE_URL,
     description: SITE_DESCRIPTION,
-    inLanguage: "he-IL",
     areaServed: { "@type": "Country", name: "IL" },
-    availableLanguage: ["he", "en"],
     priceRange: "₪₪",
     makesOffer: PLANS.map((plan) => ({
       "@type": "Offer",
