@@ -1,4 +1,4 @@
-import { PLANS } from "./content/plans";
+import { SERVICES } from "./content/services";
 import BrowserDemo from "./components/BrowserDemo";
 import Contact from "./components/Contact";
 import Faq from "./components/Faq";
@@ -9,7 +9,7 @@ import HowItWorks from "./components/HowItWorks";
 import PlanSection from "./components/PlanSection";
 import Trust from "./components/Trust";
 
-const [website, app, server] = PLANS;
+const [website, wordpress, app, server] = SERVICES;
 
 export default function App() {
   return (
@@ -37,7 +37,8 @@ export default function App() {
           </div>
         </PlanSection>
 
-        <PlanSection plan={app} tone="sky" />
+        <PlanSection plan={wordpress} tone="sky" />
+        <PlanSection plan={app} tone="paper" />
         <PlanSection plan={server} tone="sea" />
 
         <Trust />
