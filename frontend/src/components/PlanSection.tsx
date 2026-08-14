@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { Plan } from "../content/plans";
+import type { Service } from "../content/services";
 import InvolvementBar from "./InvolvementBar";
 import WhatsAppButton from "./WhatsAppButton";
 
@@ -33,6 +33,7 @@ const TONES: Record<Tone, { section: string; title: string; body: string; eyebro
 /** The axis position, said out loud. */
 const ROLE: Record<string, string> = {
   website: "אתה לא נוגע בכלום",
+  wordpress: "אתה מנהל תוכן. אני את כל השאר.",
   app: "אתה כותב קוד. זה הכל.",
   server: "אתה בשליטה מלאה",
 };
@@ -42,7 +43,7 @@ export default function PlanSection({
   tone,
   children,
 }: {
-  plan: Plan;
+  plan: Service;
   tone: Tone;
   children?: ReactNode;
 }) {

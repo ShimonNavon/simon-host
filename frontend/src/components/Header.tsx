@@ -1,4 +1,4 @@
-import { PLANS } from "../content/plans";
+import { SERVICES } from "../content/services";
 
 export default function Header() {
   return (
@@ -8,7 +8,7 @@ export default function Header() {
           Simon<span className="text-jaffa"> Host</span>
         </a>
         <nav className="hidden md:flex items-center gap-6 font-bold text-sm">
-          {PLANS.map((plan) => (
+          {SERVICES.map((plan) => (
             <a key={plan.id} href={`#${plan.id}`} className="hover:text-jaffa">
               {plan.name}
             </a>

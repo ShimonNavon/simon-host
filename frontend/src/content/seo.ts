@@ -5,7 +5,7 @@
  * scripts/prerender.mjs, so the prices and questions a crawler reads can never
  * drift from the ones a visitor sees.
  */
-import { PLANS } from "./plans";
+import { SERVICES } from "./services";
 import { QUESTIONS } from "../components/Faq";
 
 export const SITE_URL = "https://simonhost.navonsimon.com";
@@ -28,7 +28,7 @@ function service() {
     description: SITE_DESCRIPTION,
     areaServed: { "@type": "Country", name: "IL" },
     priceRange: "₪₪",
-    makesOffer: PLANS.map((plan) => ({
+    makesOffer: SERVICES.map((plan) => ({
       "@type": "Offer",
       name: plan.name,
       description: plan.tagline,

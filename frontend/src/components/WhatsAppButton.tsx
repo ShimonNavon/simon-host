@@ -1,4 +1,4 @@
-import { whatsappUrl } from "../content/plans";
+import { whatsappUrl } from "../content/services";
 
 export function WhatsAppIcon({ size = 26 }: { size?: number }) {
   return (

@@ -1,4 +1,4 @@
-import { PLANS } from "../content/plans";
+import { SERVICES } from "../content/services";
 import InvolvementBar from "./InvolvementBar";
 
 /**
@@ -12,7 +12,7 @@ export default function Ladder() {
       <p className="text-sm font-bold text-jaffa mb-2">אני עושה הכל</p>
 
       <div className="grid gap-3">
-        {PLANS.map((plan) => (
+        {SERVICES.map((plan) => (
           <a key={plan.id} href={`#${plan.id}`} className="ladder-stop">
             <InvolvementBar mine={plan.mine} />
             <div className="flex items-baseline justify-between gap-3 mt-3">

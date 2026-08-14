@@ -1,4 +1,4 @@
-import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "../content/plans";
+import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "../content/services";
 import WhatsAppButton from "./WhatsAppButton";
 
 const GENERAL_MESSAGE =
