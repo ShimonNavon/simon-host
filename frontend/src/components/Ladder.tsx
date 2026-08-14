@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { SERVICES } from "../content/services";
 import InvolvementBar from "./InvolvementBar";
 
@@ -13,7 +14,7 @@ export default function Ladder() {
 
       <div className="grid gap-3">
         {SERVICES.map((plan) => (
-          <a key={plan.id} href={`#${plan.id}`} className="ladder-stop">
+          <Link key={plan.id} to={`/${plan.slug}`} className="ladder-stop">
             <InvolvementBar mine={plan.mine} />
             <div className="flex items-baseline justify-between gap-3 mt-3">
               <h2 className="text-xl text-sea">{plan.name}</h2>
@@ -23,7 +24,7 @@ export default function Ladder() {
               </span>
             </div>
             <p className="text-ink-soft text-sm mt-1">{plan.tagline}</p>
-          </a>
+          </Link>
         ))}
       </div>
 
