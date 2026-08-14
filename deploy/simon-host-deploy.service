@@ -1,0 +1,9 @@
+[Unit]
+Description=Auto-deploy simon-host from origin/main
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=simon
+ExecStart=/bin/bash /srv/simon-host/deploy/deploy.sh
