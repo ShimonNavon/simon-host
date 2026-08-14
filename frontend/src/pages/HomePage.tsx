@@ -1,9 +1,12 @@
+import About from "../components/About";
+import Community from "../components/Community";
 import Contact from "../components/Contact";
 import Faq from "../components/Faq";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
+import Infrastructure from "../components/Infrastructure";
+import Portfolio from "../components/Portfolio";
 import PricingGrid from "../components/PricingGrid";
-import Trust from "../components/Trust";
 
 export default function HomePage() {
   return (
@@ -20,7 +23,11 @@ export default function HomePage() {
 
       <PricingGrid />
 
-      <Trust />
+      <Infrastructure />
+      <About />
+      <Community />
+      <Portfolio />
+
       <HowItWorks />
       <Faq />
       <Contact />
