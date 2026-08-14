@@ -1,17 +1,26 @@
 /**
  * Build-time entry point. Never ships to the browser.
  *
- * scripts/prerender.mjs imports this, renders the app to static HTML, and
- * injects it into dist/index.html so crawlers and link-preview bots get the
- * real page instead of an empty <div id="root">.
+ * scripts/prerender.mjs imports this and calls render() once per route,
+ * injecting the HTML and per-route head into that route's index.html so
+ * crawlers and link-preview bots get the real page instead of an empty
+ * <div id="root">.
  */
 import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
 import App from "./App";
-import { structuredData } from "./content/seo";
+import { routeMeta, structuredData } from "./content/seo";
 
-export function render() {
+export { ALL_PATHS } from "./routes";
+
+export function render(path: string) {
   return {
-    html: renderToString(<App />),
-    jsonLd: structuredData(),
+    html: renderToString(
+      <StaticRouter location={path}>
+        <App />
+      </StaticRouter>
+    ),
+    jsonLd: structuredData(path),
+    meta: routeMeta(path),
   };
 }
