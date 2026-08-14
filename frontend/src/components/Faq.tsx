@@ -30,6 +30,7 @@ export default function Faq() {
   return (
     <section id="faq" className="bg-sky/60 py-20 scroll-mt-16">
       <div className="max-w-3xl mx-auto px-5">
+        <p className="font-bold text-jaffa mb-3">שאלות</p>
         <h2 className="text-3xl sm:text-4xl text-sea mb-8">שאלות שנשאלתי</h2>
         <div className="grid gap-3">
           {QUESTIONS.map((item) => (

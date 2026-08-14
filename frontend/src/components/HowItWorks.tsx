@@ -21,6 +21,7 @@ export default function HowItWorks() {
   return (
     <section id="how" className="py-20 scroll-mt-16">
       <div className="max-w-6xl mx-auto px-5">
+        <p className="font-bold text-jaffa mb-3">התהליך</p>
         <h2 className="text-3xl sm:text-4xl text-sea mb-10">מהודעה ראשונה עד באוויר</h2>
         <ol className="grid md:grid-cols-3 gap-8">
           {STEPS.map((s) => (
