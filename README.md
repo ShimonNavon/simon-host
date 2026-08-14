@@ -37,3 +37,10 @@ docker compose up -d --build
 ---
 
 Built by **Simon Navon** — [consulting.navonsimon.com](https://consulting.navonsimon.com)
+
+## Deploy pipeline
+
+CI builds the frontend on every PR. Merging to `main` deploys itself: a
+systemd timer on the server checks `origin/main` every minute and, on a new
+commit, fast-forwards and rebuilds the compose stack (`deploy/deploy.sh`).
+Merged branches are deleted automatically.
