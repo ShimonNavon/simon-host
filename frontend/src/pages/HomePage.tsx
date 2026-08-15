@@ -1,6 +1,7 @@
 import About from "../components/About";
 import Community from "../components/Community";
 import Contact from "../components/Contact";
+import DomainSearch from "../components/DomainSearch";
 import Faq from "../components/Faq";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
@@ -12,6 +13,7 @@ export default function HomePage() {
   return (
     <main id="top">
       <Hero />
+      <DomainSearch />
 
       {/* Why the prices aren't in ascending order. */}
       <div className="max-w-6xl mx-auto px-5 pb-12">

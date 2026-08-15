@@ -51,6 +51,7 @@ export default function ServicePage({ service }: { service: Service }) {
             <WhatsAppButton
               message={service.whatsapp}
               label={service.ctaLabel}
+              campaign={`page-${service.slug}`}
               className="w-full text-lg"
             />
 

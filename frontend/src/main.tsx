@@ -3,6 +3,10 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
+import { captureUtm, sessionStore } from "./lib/utm";
+
+// First-touch attribution: remember utm_* from the landing URL for this tab.
+captureUtm(window.location.search, sessionStore());
 
 const root = document.getElementById("root")!;
 
