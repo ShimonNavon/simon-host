@@ -4,6 +4,7 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("leads.urls")),
+    path("api/domains/", include("domains.urls")),
 ]
 
 admin.site.site_header = "Simon Host — ניהול"
