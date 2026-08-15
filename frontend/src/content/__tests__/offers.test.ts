@@ -60,7 +60,7 @@ describe("offers content", () => {
   it("only the four published prices appear anywhere in offer copy", () => {
     const published = new Set(["49", "99", "149", "79"]);
     for (const text of allStrings(OFFERS)) {
-      for (const m of text.matchAll(/₪\s?([\d,]+)|([\d,]+)\s?₪/g)) {
+      for (const m of text.matchAll(/₪\s?(\d[\d,]*)|(\d[\d,]*)\s?₪/g)) {
         const n = (m[1] ?? m[2]).replace(/,/g, "");
         expect(published.has(n), `unpublished price "${m[0]}" in: ${text}`).toBe(true);
       }
