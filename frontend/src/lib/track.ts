@@ -5,9 +5,20 @@ import { readUtm, sessionStore } from "./utm";
  * tab navigating to WhatsApp), fetch keepalive as fallback. Never throws,
  * never blocks the click.
  */
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 export function trackWhatsAppClick(campaign: string): void {
   if (typeof window === "undefined") return;
   try {
+    // GA4 key event (the gtag snippet lives in index.html); harmless if absent.
+    window.gtag?.("event", "whatsapp_click", {
+      campaign: campaign.slice(0, 80),
+      page: window.location.pathname.slice(0, 120),
+    });
     const body = JSON.stringify({
       kind: "whatsapp",
       page: window.location.pathname.slice(0, 120),
