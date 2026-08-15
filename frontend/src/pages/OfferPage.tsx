@@ -29,6 +29,7 @@ export default function OfferPage({ offer }: { offer: Offer }) {
             <WhatsAppButton
               message={offer.whatsapp}
               label={offer.ctaLabel}
+              campaign={`${offer.slug}-hero`}
               className="w-full text-lg"
             />
             <p className="text-ink-soft text-sm mt-6 border-t border-[#e8e2d6] pt-4">
@@ -128,6 +129,7 @@ export default function OfferPage({ offer }: { offer: Offer }) {
         body="הודעה אחת בוואטסאפ, בלי טופס ובלי נציג — אני עונה בעצמי."
         message={offer.whatsapp}
         label={offer.ctaLabel}
+        campaign={`${offer.slug}-contact`}
       />
     </main>
   );
