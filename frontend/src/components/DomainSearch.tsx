@@ -88,12 +88,12 @@ export default function DomainSearch() {
   );
 
   return (
-    <section id="domain" className="max-w-6xl mx-auto px-5 pb-16 scroll-mt-16">
-      <div className="bg-sea rounded-2xl px-6 py-8 sm:px-10 sm:py-10 text-white">
+    <section id="domain" className="domain-section section-shell scroll-mt-16">
+      <div className="content-width domain-panel">
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-6 lg:gap-10 items-center">
           <div>
-            <p className="font-bold text-jaffa mb-2">יש כבר שם לעסק?</p>
-            <h2 className="text-2xl sm:text-3xl">בודקים אם הדומיין פנוי.</h2>
+            <p className="section-kicker">יש כבר שם לעסק?</p>
+            <h2>בודקים אם הדומיין פנוי.</h2>
             <p className="text-white/75 mt-3 text-sm sm:text-base max-w-sm">
               כותבים שם — גם בעברית — ואני בודק מולכם ב־co.il, com, net ו־io. אם
               הוא פנוי, פותחים איתו אתר.

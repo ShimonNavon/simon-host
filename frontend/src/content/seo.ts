@@ -1,79 +1,131 @@
-/**
- * Per-route metadata and structured data, built from the same content the
- * pages render — the prices and questions a crawler reads can never drift
- * from the ones a visitor sees. scripts/prerender.mjs calls these for every
- * route at build time.
- */
-import { SERVICES, type Service } from "./services";
-import { OFFERS, type Offer } from "./offers";
 import { QUESTIONS } from "../components/Faq";
+import { ARTICLES, findArticle, articlePath, type Article } from "./articles";
+import { OFFERS, type Offer } from "./offers";
+import { SERVICES, WHATSAPP_NUMBER, type Service } from "./services";
+import { FOUNDER, SITE } from "./site";
 
-export const SITE_URL = "https://simonhost.navonsimon.com";
-
-export const SITE_NAME = "Simon Host";
-
-export const SITE_DESCRIPTION =
-  "אחסון וורדפרס מנוהל ב־49 ₪, אתר לעסק ב־99 ₪, אפליקציה עם בסיס נתונים ב־149 ₪, או שרת פרטי ב־79 ₪ לחודש. מחיר קבוע, בלי דמי הקמה, ומענה אנושי בוואטסאפ.";
-
-/** The one shared preview image until a page brings its own. */
+export const SITE_URL = SITE.url;
+export const SITE_NAME = SITE.name;
+export const SITE_DESCRIPTION = SITE.description;
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og.png`;
+export const SITE_UPDATED = "2026-08-15";
 
 export type RouteMeta = {
   title: string;
   description: string;
   path: string;
-  /** Absolute URL of the Open Graph image for this route. */
+  canonical: string;
+  robots: string;
   ogImage: string;
-  /** Per-page alt text for that image — never the same sentence on every page. */
   ogImageAlt: string;
+  pageType: "website" | "service" | "blog" | "article" | "not-found";
+  published?: string;
+  modified: string;
 };
 
-/** "/agencies/" (as nginx serves it) and "/agencies" are the same page. */
 function normalize(path: string): string {
-  return path.length > 1 ? path.replace(/\/+$/, "") : path;
+  const withoutQuery = path.split(/[?#]/, 1)[0] || "/";
+  return withoutQuery.length > 1 ? withoutQuery.replace(/\/+$/, "") : withoutQuery;
+}
+
+function canonicalFor(path: string): string {
+  return path === "/" ? `${SITE_URL}/` : `${SITE_URL}${path}`;
 }
 
 function findService(path: string): Service | undefined {
-  const p = normalize(path);
-  return SERVICES.find((s) => `/${s.slug}` === p);
+  return SERVICES.find((service) => `/${service.slug}` === normalize(path));
 }
 
 function findOffer(path: string): Offer | undefined {
-  const p = normalize(path);
-  return OFFERS.find((o) => `/${o.slug}` === p);
+  return OFFERS.find((offer) => `/${offer.slug}` === normalize(path));
 }
 
-export function routeMeta(path: string): RouteMeta {
-  const service = findService(path);
-  if (service) {
-    return {
-      title: service.seo.title,
-      description: service.seo.description,
-      path,
-      ogImage: DEFAULT_OG_IMAGE,
-      ogImageAlt: `Simon Host — ${service.name}, ${service.price} ₪ לחודש`,
-    };
-  }
-  const offer = findOffer(path);
-  if (offer) {
-    return {
-      title: offer.seo.title,
-      description: offer.seo.description,
-      path,
-      ogImage: offer.ogImage ? `${SITE_URL}${offer.ogImage}` : DEFAULT_OG_IMAGE,
-      ogImageAlt: offer.ogImageAlt,
-    };
-  }
+function baseMeta(
+  path: string,
+  fields: Omit<RouteMeta, "path" | "canonical" | "robots" | "modified"> &
+    Partial<Pick<RouteMeta, "canonical" | "robots" | "modified">>
+): RouteMeta {
+  const normalized = normalize(path);
   return {
-    title: "Simon Host — אחסון אתרים, וורדפרס, אפליקציות ושרתים בישראל",
-    description: SITE_DESCRIPTION,
-    path: "/",
-    ogImage: DEFAULT_OG_IMAGE,
-    ogImageAlt: "Simon Host — אתר לעסק, וורדפרס, אפליקציה, שרת פרטי",
+    ...fields,
+    path: normalized,
+    canonical: fields.canonical ?? canonicalFor(normalized),
+    robots: fields.robots ?? "index, follow, max-image-preview:large",
+    modified: fields.modified ?? SITE_UPDATED,
   };
 }
 
-function offer(service: Service) {
+export function routeMeta(path: string): RouteMeta {
+  const normalized = normalize(path);
+  const service = findService(normalized);
+  if (service) {
+    return baseMeta(normalized, {
+      title: service.seo.title,
+      description: service.seo.description,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: `Simon Host — ${service.name}, ${service.price} ₪ לחודש`,
+      pageType: "service",
+    });
+  }
+
+  const offer = findOffer(normalized);
+  if (offer) {
+    return baseMeta(normalized, {
+      title: offer.seo.title,
+      description: offer.seo.description,
+      ogImage: offer.ogImage ? `${SITE_URL}${offer.ogImage}` : DEFAULT_OG_IMAGE,
+      ogImageAlt: offer.ogImageAlt,
+      pageType: "service",
+    });
+  }
+
+  const article = findArticle(normalized);
+  if (article) {
+    return baseMeta(normalized, {
+      title: `${article.title} | Simon Host`,
+      description: article.description,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: `${article.title} — מדריך של Simon Host`,
+      pageType: "article",
+      published: article.published,
+      modified: article.modified,
+    });
+  }
+
+  if (normalized === "/blog") {
+    return baseMeta(normalized, {
+      title: "מדריכי אחסון, וורדפרס ושרתים | Simon Host",
+      description:
+        "מדריכים מעשיים בעברית על אחסון וורדפרס, העברת אתרים, ריסלר cPanel, שרתי VPS והעלאת אפליקציות לפרודקשן.",
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: "המדריכים של Simon Host — אחסון, אתרים ואפליקציות",
+      pageType: "blog",
+    });
+  }
+
+  if (normalized === "/") {
+    return baseMeta(normalized, {
+      title: "Simon Host — אחסון מנוהל לסוכנויות, אתרים ואפליקציות",
+      description:
+        "מעבירים אתרי לקוחות בלי השבתה: בדיקת חשבון חינם, אתר ניסיון ל־14 יום, גיבוי יומי ומענה ישיר מסיימון. גם אתרים, אפליקציות ושרתים במחיר קבוע.",
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: "Simon Host — אחסון מנוהל עם סיימון נבון בצד השני",
+      pageType: "website",
+    });
+  }
+
+  return baseMeta("/404", {
+    title: "העמוד לא נמצא | Simon Host",
+    description: "העמוד שחיפשתם אינו קיים. אפשר לחזור לשירותים ולמדריכים של Simon Host.",
+    canonical: `${SITE_URL}/404`,
+    robots: "noindex, follow",
+    ogImage: DEFAULT_OG_IMAGE,
+    ogImageAlt: "Simon Host",
+    pageType: "not-found",
+  });
+}
+
+function serviceOffer(service: Service) {
   return {
     "@type": "Offer",
     name: service.name,
@@ -81,6 +133,7 @@ function offer(service: Service) {
     price: service.price,
     priceCurrency: "ILS",
     availability: "https://schema.org/InStock",
+    url: `${SITE_URL}/${service.slug}`,
     priceSpecification: {
       "@type": "UnitPriceSpecification",
       price: service.price,
@@ -91,10 +144,20 @@ function offer(service: Service) {
   };
 }
 
-/**
- * A ProfessionalService rather than a plain Organization: this is one person
- * selling his time, and the four rungs are the offers.
- */
+function person() {
+  return {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#founder`,
+    name: FOUNDER.name,
+    alternateName: FOUNDER.alternateName,
+    jobTitle: FOUNDER.role,
+    image: `${SITE_URL}${FOUNDER.portrait}`,
+    url: `${SITE_URL}/#about`,
+    sameAs: [FOUNDER.linkedin, FOUNDER.github],
+    worksFor: { "@id": `${SITE_URL}/#business` },
+  };
+}
+
 function business() {
   return {
     "@type": "ProfessionalService",
@@ -102,9 +165,39 @@ function business() {
     name: SITE_NAME,
     url: SITE_URL,
     description: SITE_DESCRIPTION,
-    areaServed: { "@type": "Country", name: "IL" },
+    image: DEFAULT_OG_IMAGE,
+    telephone: `+${WHATSAPP_NUMBER}`,
+    founder: { "@id": `${SITE_URL}/#founder` },
+    sameAs: [FOUNDER.linkedin, FOUNDER.github],
+    areaServed: { "@type": "Country", name: "Israel" },
     priceRange: "₪₪",
-    makesOffer: SERVICES.map(offer),
+    makesOffer: SERVICES.map(serviceOffer),
+  };
+}
+
+function webSite() {
+  return {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: `${SITE_URL}/`,
+    name: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    inLanguage: SITE.language,
+    publisher: { "@id": `${SITE_URL}/#business` },
+  };
+}
+
+function webPage(meta: RouteMeta) {
+  return {
+    "@type": meta.pageType === "blog" ? "CollectionPage" : "WebPage",
+    "@id": `${meta.canonical}#webpage`,
+    url: meta.canonical,
+    name: meta.title,
+    description: meta.description,
+    inLanguage: SITE.language,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    about: { "@id": `${SITE_URL}/#business` },
+    dateModified: meta.modified,
   };
 }
 
@@ -120,15 +213,16 @@ function faqPage(id: string, questions: { q: string; a: string }[]) {
   };
 }
 
-function webSite() {
+function breadcrumb(items: { name: string; path: string }[], pageUrl: string) {
   return {
-    "@type": "WebSite",
-    "@id": `${SITE_URL}/#website`,
-    url: SITE_URL,
-    name: SITE_NAME,
-    description: SITE_DESCRIPTION,
-    inLanguage: "he-IL",
-    publisher: { "@id": `${SITE_URL}/#business` },
+    "@type": "BreadcrumbList",
+    "@id": `${pageUrl}#breadcrumb`,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: canonicalFor(item.path),
+    })),
   };
 }
 
@@ -141,55 +235,110 @@ function serviceNode(service: Service) {
     description: service.seo.description,
     url: pageUrl,
     provider: { "@id": `${SITE_URL}/#business` },
-    areaServed: { "@type": "Country", name: "IL" },
-    offers: offer(service),
+    areaServed: { "@type": "Country", name: "Israel" },
+    offers: serviceOffer(service),
   };
 }
 
-/**
- * An offer landing page is a Service too — one without a fixed price, since
- * the price is set per audit / per build plan. Its FAQ is its own.
- */
-function offerNode(page: Offer) {
-  const pageUrl = `${SITE_URL}/${page.slug}`;
+function offerNode(offer: Offer) {
+  const pageUrl = `${SITE_URL}/${offer.slug}`;
   return {
     "@type": "Service",
     "@id": `${pageUrl}#service`,
-    name: page.name,
-    description: page.seo.description,
+    name: offer.name,
+    description: offer.seo.description,
     url: pageUrl,
     provider: { "@id": `${SITE_URL}/#business` },
-    areaServed: { "@type": "Country", name: "IL" },
+    areaServed: { "@type": "Country", name: "Israel" },
+  };
+}
+
+function blogPosting(article: Article, meta: RouteMeta) {
+  return {
+    "@type": "BlogPosting",
+    "@id": `${meta.canonical}#article`,
+    headline: article.title,
+    description: article.description,
+    url: meta.canonical,
+    mainEntityOfPage: { "@id": `${meta.canonical}#webpage` },
+    image: meta.ogImage,
+    datePublished: article.published,
+    dateModified: article.modified,
+    inLanguage: SITE.language,
+    keywords: article.keywords.join(", "),
+    author: { "@id": `${SITE_URL}/#founder` },
+    publisher: { "@id": `${SITE_URL}/#business` },
   };
 }
 
 export function structuredData(path: string) {
-  const service = findService(path);
+  const normalized = normalize(path);
+  const meta = routeMeta(normalized);
+  const graph: Record<string, unknown>[] = [business(), person(), webSite(), webPage(meta)];
+  const service = findService(normalized);
   if (service) {
-    return {
-      "@context": "https://schema.org",
-      "@graph": [
-        serviceNode(service),
-        business(),
-        webSite(),
-        faqPage(`${SITE_URL}/${service.slug}#faq`, service.faq),
-      ],
-    };
+    graph.push(
+      serviceNode(service),
+      faqPage(`${meta.canonical}#faq`, service.faq),
+      breadcrumb(
+        [
+          { name: "ראשי", path: "/" },
+          { name: service.name, path: normalized },
+        ],
+        meta.canonical
+      )
+    );
   }
-  const page = findOffer(path);
-  if (page) {
-    return {
-      "@context": "https://schema.org",
-      "@graph": [
-        offerNode(page),
-        business(),
-        webSite(),
-        faqPage(`${SITE_URL}/${page.slug}#faq`, page.faq),
-      ],
-    };
+
+  const offer = findOffer(normalized);
+  if (offer) {
+    graph.push(
+      offerNode(offer),
+      faqPage(`${meta.canonical}#faq`, offer.faq),
+      breadcrumb(
+        [
+          { name: "ראשי", path: "/" },
+          { name: offer.name, path: normalized },
+        ],
+        meta.canonical
+      )
+    );
   }
-  return {
-    "@context": "https://schema.org",
-    "@graph": [business(), webSite(), faqPage(`${SITE_URL}/#faq`, QUESTIONS)],
-  };
+
+  const article = findArticle(normalized);
+  if (article) {
+    graph.push(
+      blogPosting(article, meta),
+      breadcrumb(
+        [
+          { name: "ראשי", path: "/" },
+          { name: "מדריכים", path: "/blog" },
+          { name: article.title, path: articlePath(article) },
+        ],
+        meta.canonical
+      )
+    );
+  } else if (normalized === "/blog") {
+    graph.push(
+      breadcrumb(
+        [
+          { name: "ראשי", path: "/" },
+          { name: "מדריכים", path: "/blog" },
+        ],
+        meta.canonical
+      )
+    );
+  } else if (normalized === "/") {
+    graph.push(faqPage(`${SITE_URL}/#faq`, QUESTIONS));
+  }
+
+  return { "@context": "https://schema.org", "@graph": graph };
+}
+
+export function routeLastModified(path: string): string {
+  return routeMeta(path).modified;
+}
+
+export function articleFeedItems() {
+  return ARTICLES.map((article) => ({ article, url: `${SITE_URL}${articlePath(article)}` }));
 }

@@ -15,7 +15,13 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = resolve(root, "dist");
 
-const { render, ALL_PATHS } = await import(resolve(root, "dist-ssr/entry-server.js"));
+const {
+  render,
+  INDEXABLE_PATHS,
+  PRERENDER_PATHS,
+  articleFeedItems,
+  routeLastModified,
+} = await import(resolve(root, "dist-ssr/entry-server.js"));
 
 const SITE_URL = "https://simonhost.navonsimon.com";
 const template = await readFile(resolve(dist, "index.html"), "utf8");
@@ -27,8 +33,10 @@ if (!template.includes(mountPoint)) {
 
 const escapeAttr = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 const escapeText = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+const escapeXml = (s) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-for (const path of ALL_PATHS) {
+for (const path of PRERENDER_PATHS) {
   const { html, jsonLd, meta } = render(path);
 
   if (!html || html.length < 1000) {
@@ -37,10 +45,10 @@ for (const path of ALL_PATHS) {
     );
   }
 
-  const url = path === "/" ? `${SITE_URL}/` : `${SITE_URL}${path}`;
+  const url = meta.canonical;
 
   // "<" is escaped so a stray "</script>" inside the data cannot close the tag.
-  const ldScript = `<script type="application/ld+json">${JSON.stringify(
+  const ldScript = `<script type="application/ld+json" data-route-schema>${JSON.stringify(
     jsonLd
   ).replace(/</g, "\\u003c")}</script>`;
 
@@ -50,7 +58,12 @@ for (const path of ALL_PATHS) {
       /(<meta\s+name="description"\s+content=")[^"]*(")/,
       `$1${escapeAttr(meta.description)}$2`
     )
+    .replace(/(<meta\s+name="robots"\s+content=")[^"]*(")/, `$1${meta.robots}$2`)
     .replace(/(<link rel="canonical" href=")[^"]*(")/, `$1${url}$2`)
+    .replace(
+      /(<meta\s+property="og:type"\s+content=")[^"]*(")/,
+      `$1${meta.pageType === "article" ? "article" : "website"}$2`
+    )
     .replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${url}$2`)
     .replace(
       /(<meta\s+property="og:title"\s+content=")[^"]*(")/,
@@ -75,8 +88,12 @@ for (const path of ALL_PATHS) {
       `$1${escapeAttr(meta.ogImageAlt)}$2`
     )
     .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*(")/, `$1${meta.ogImage}$2`)
-    .replace(mountPoint, `<div id="root">${html}</div>`)
-    .replace("</head>", `  ${ldScript}\n  </head>`);
+    .replace(mountPoint, `<div id="root">${html}</div>`);
+
+  const articleMeta = meta.published
+    ? `<meta property="article:published_time" content="${meta.published}" />\n    <meta property="article:modified_time" content="${meta.modified}" />`
+    : "";
+  page = page.replace("</head>", `  ${articleMeta}\n    ${ldScript}\n  </head>`);
 
   const outFile =
     path === "/" ? resolve(dist, "index.html") : resolve(dist, path.slice(1), "index.html");
@@ -85,17 +102,47 @@ for (const path of ALL_PATHS) {
   console.log(`prerender: ${path} → ${outFile.replace(root + "/", "")} (${html.length} chars)`);
 }
 
-const today = new Date().toISOString().slice(0, 10);
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${ALL_PATHS.map((p) => {
+${INDEXABLE_PATHS.map((p) => {
   const url = p === "/" ? `${SITE_URL}/` : `${SITE_URL}${p}`;
-  return `  <url><loc>${url}</loc><lastmod>${today}</lastmod></url>`;
+  return `  <url><loc>${url}</loc><lastmod>${routeLastModified(p)}</lastmod></url>`;
 }).join("\n")}
 </urlset>
 `;
 await writeFile(resolve(dist, "sitemap.xml"), sitemap);
-console.log(`prerender: sitemap.xml with ${ALL_PATHS.length} URLs`);
+console.log(`prerender: sitemap.xml with ${INDEXABLE_PATHS.length} URLs`);
+
+const feedItems = articleFeedItems();
+const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>המדריכים של Simon Host</title>
+    <link>${SITE_URL}/blog</link>
+    <description>מדריכים מעשיים על אחסון, וורדפרס, שרתים ואפליקציות.</description>
+    <language>he-IL</language>
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
+${feedItems
+  .map(
+    ({ article, url }) => `    <item>
+      <title>${escapeXml(article.title)}</title>
+      <link>${url}</link>
+      <guid isPermaLink="true">${url}</guid>
+      <pubDate>${new Date(`${article.published}T09:00:00Z`).toUTCString()}</pubDate>
+      <description>${escapeXml(article.description)}</description>
+    </item>`
+  )
+  .join("\n")}
+  </channel>
+</rss>
+`;
+await writeFile(resolve(dist, "rss.xml"), rss);
+console.log(`prerender: rss.xml with ${feedItems.length} items`);
+
+await writeFile(
+  resolve(dist, "route-manifest.json"),
+  JSON.stringify({ indexable: INDEXABLE_PATHS, notFound: "/404" }, null, 2)
+);
 
 // The SSR bundle is a build artifact; it must never reach the image.
 await rm(resolve(root, "dist-ssr"), { recursive: true, force: true });

@@ -1,48 +1,40 @@
 import { Link } from "react-router-dom";
-import { SERVICES } from "../content/services";
-import { OFFERS } from "../content/offers";
+import { FOUNDER } from "../content/site";
 
 export default function Footer() {
   return (
-    <footer className="bg-sea-deep text-white/70 py-10">
-      <div className="max-w-6xl mx-auto px-5">
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div>
-            <span className="font-display text-lg text-white">
-              Simon<span className="text-jaffa"> Host</span>
-            </span>
-            <p className="text-sm mt-2 max-w-[16rem]">
-              אחסון ישראלי עם בן־אדם בצד השני — וקהילה של יזמים מסביב.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-10">
-            <nav className="grid gap-1.5 text-sm" aria-label="מסלולים">
-              {SERVICES.map((service) => (
-                <Link
-                  key={service.id}
-                  to={`/${service.slug}`}
-                  className="hover:text-jaffa transition-colors"
-                >
-                  {service.name} · {service.price} ₪
-                </Link>
-              ))}
-            </nav>
-            <nav className="grid gap-1.5 text-sm content-start" aria-label="מסלולים מיוחדים">
-              {OFFERS.map((offer) => (
-                <Link
-                  key={offer.id}
-                  to={`/${offer.slug}`}
-                  className="hover:text-jaffa transition-colors"
-                >
-                  {offer.navLabel}
-                </Link>
-              ))}
-            </nav>
-          </div>
+    <footer className="site-footer">
+      <div className="content-width">
+        <div className="footer-brand">
+          <Link to="/" className="site-logo">Simon <span>Host</span></Link>
+          <p>אחסון, אתרים ומוצרים עם בן־אדם אחד שאחראי מהרגע הראשון.</p>
         </div>
-        <p className="text-sm mt-8 pt-4 border-t border-white/10">
-          אתרים, אפליקציות ושרתים · © 2026
-        </p>
+        <div className="footer-navs">
+          <nav aria-label="שירותים">
+            <strong>שירותים</strong>
+            <Link to="/agencies">אחסון לסוכנויות</Link>
+            <Link to="/wordpress">WordPress מנוהל</Link>
+            <Link to="/apps">אחסון אפליקציות</Link>
+            <Link to="/vps">שרת פרטי</Link>
+          </nav>
+          <nav aria-label="מידע">
+            <strong>מידע</strong>
+            <Link to="/launch">מרעיון למוצר</Link>
+            <Link to="/websites">אתר לעסק</Link>
+            <Link to="/blog">מדריכים</Link>
+            <a href="/#about">סיימון נבון</a>
+          </nav>
+          <nav aria-label="פרופילים">
+            <strong>סיימון ברשת</strong>
+            <a href={FOUNDER.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+            <a href={FOUNDER.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+            <a href="/rss.xml">RSS</a>
+          </nav>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 Simon Host</span>
+          <span>מופעל מישראל · נבנה ומאוחסן כאן</span>
+        </div>
       </div>
     </footer>
   );

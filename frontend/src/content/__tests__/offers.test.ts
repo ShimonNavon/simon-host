@@ -8,7 +8,7 @@ import {
   agencyScarcity,
 } from "../offers";
 import { routeMeta, structuredData } from "../seo";
-import { ALL_PATHS } from "../../routes";
+import { ALL_PATHS, ARTICLE_ROUTES } from "../../routes";
 
 /** Every string an offer page can render, flattened — the gate tests scan this. */
 function allStrings(value: unknown, out: string[] = []): string[] {
@@ -99,7 +99,7 @@ describe("offer routes and seo", () => {
   it("both offers are prerendered paths", () => {
     expect(ALL_PATHS).toContain("/agencies");
     expect(ALL_PATHS).toContain("/launch");
-    expect(ALL_PATHS).toHaveLength(7);
+    expect(ALL_PATHS).toHaveLength(8 + ARTICLE_ROUTES.length);
   });
 
   it("route meta carries the offer's title and a per-page og image alt", () => {

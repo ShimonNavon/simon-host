@@ -38,11 +38,11 @@ export default function Faq({
   title?: string;
 }) {
   return (
-    <section id="faq" className="bg-sky/60 py-20 scroll-mt-16">
-      <div className="max-w-3xl mx-auto px-5">
-        <p className="font-bold text-jaffa mb-3">שאלות</p>
-        <h2 className="text-3xl sm:text-4xl text-sea mb-8">{title}</h2>
-        <div className="grid gap-3">
+    <section id="faq" className="faq-section section-shell scroll-mt-16">
+      <div className="narrow-width">
+        <p className="section-kicker">שאלות</p>
+        <h2>{title}</h2>
+        <div className="faq-list">
           {questions.map((item) => (
             <details key={item.q} className="faq-item">
               <summary>{item.q}</summary>

@@ -1,40 +1,38 @@
-import About from "../components/About";
-import Community from "../components/Community";
+import AgencyHero from "../components/AgencyHero";
+import AudiencePaths from "../components/AudiencePaths";
 import Contact from "../components/Contact";
 import DomainSearch from "../components/DomainSearch";
 import Faq from "../components/Faq";
-import Hero from "../components/Hero";
-import HowItWorks from "../components/HowItWorks";
+import FounderSection from "../components/FounderSection";
+import GuidesPreview from "../components/GuidesPreview";
 import Infrastructure from "../components/Infrastructure";
-import OfferStrip from "../components/OfferStrip";
+import MigrationComparison from "../components/MigrationComparison";
+import MobileAuditBar from "../components/MobileAuditBar";
 import Portfolio from "../components/Portfolio";
 import PricingGrid from "../components/PricingGrid";
+import { AGENCY_AUDIT_MESSAGE } from "../content/site";
 
 export default function HomePage() {
   return (
     <main id="top">
-      <Hero />
-      <DomainSearch />
-
-      {/* Why the prices aren't in ascending order. */}
-      <div className="max-w-6xl mx-auto px-5 pb-12">
-        <p className="max-w-xl text-ink-soft border-s-4 border-jaffa/40 ps-4">
-          המחיר לא הולך על הברזל — הוא הולך על כמה שאני עושה בשבילך.
-          לכן שרת פרטי עולה פחות מאתר מוכן.
-        </p>
-      </div>
-
-      <PricingGrid />
-      <OfferStrip />
-
+      <AgencyHero />
+      <MigrationComparison />
       <Infrastructure />
-      <About />
-      <Community />
+      <AudiencePaths />
+      <PricingGrid />
+      <DomainSearch />
       <Portfolio />
-
-      <HowItWorks />
+      <FounderSection />
+      <GuidesPreview />
       <Faq />
-      <Contact />
+      <Contact
+        title="הצעד הראשון לא מזיז אף אתר."
+        body="שולחים חשבונית ורשימת אתרים. אני מחזיר השוואה ותוכנית מעבר — בלי התחייבות ובלי שיחת מכירה מסביב."
+        message={AGENCY_AUDIT_MESSAGE}
+        label="שולחים לבדיקה"
+        campaign="home-final-agency-audit"
+      />
+      <MobileAuditBar />
     </main>
   );
 }

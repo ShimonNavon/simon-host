@@ -1,35 +1,75 @@
-import { Link } from "react-router-dom";
-import { SERVICES } from "../content/services";
-import { OFFERS } from "../content/offers";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { AGENCY_AUDIT_MESSAGE } from "../content/site";
+import WhatsAppButton from "./WhatsAppButton";
+
+const NAVIGATION = [
+  { href: "/agencies", label: "לסוכנויות" },
+  { href: "/launch", label: "ליזמים" },
+  { href: "/#services", label: "מסלולים" },
+  { href: "/blog", label: "מדריכים" },
+  { href: "/#about", label: "מי אני" },
+];
 
 export default function Header() {
+  const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => setOpen(false), [pathname]);
+
   return (
-    <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur border-b border-[#e8e2d6]">
-      <div className="max-w-6xl mx-auto px-5 py-3.5 flex items-center justify-between gap-4">
-        <Link to="/" className="font-display text-2xl text-sea shrink-0">
-          Simon<span className="text-jaffa"> Host</span>
+    <header className="site-header">
+      <div className="header-inner content-width">
+        <Link to="/" className="site-logo" aria-label="Simon Host — עמוד ראשי">
+          Simon <span>Host</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-6 font-bold text-sm">
-          {SERVICES.map((service) => (
-            <Link key={service.id} to={`/${service.slug}`} className="hover:text-jaffa">
-              {service.name}
-            </Link>
-          ))}
-          <span className="hidden lg:block w-px h-4 bg-[#e8e2d6]" aria-hidden="true" />
-          {OFFERS.map((offer) => (
-            <Link
-              key={offer.id}
-              to={`/${offer.slug}`}
-              className="hidden lg:inline text-jaffa hover:text-jaffa-dark"
-            >
-              {offer.navLabel}
-            </Link>
-          ))}
+
+        <nav className="desktop-nav" aria-label="ניווט ראשי">
+          {NAVIGATION.map((item) =>
+            item.href.startsWith("/#") ? (
+              <a key={item.href} href={item.href}>{item.label}</a>
+            ) : (
+              <Link key={item.href} to={item.href}>{item.label}</Link>
+            )
+          )}
         </nav>
-        <a href="#contact" className="btn-primary !py-2 !px-4 text-sm shrink-0">
-          דברו איתי
-        </a>
+
+        <div className="header-action">
+          <WhatsAppButton
+            message={AGENCY_AUDIT_MESSAGE}
+            label="בדיקת חשבון"
+            campaign="header-agency-audit"
+            className="header-cta"
+          />
+        </div>
+
+        <button
+          className={`menu-toggle${open ? " is-open" : ""}`}
+          type="button"
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+          aria-label={open ? "סגירת תפריט" : "פתיחת תפריט"}
+          onClick={() => setOpen((value) => !value)}
+        >
+          <span />
+          <span />
+        </button>
       </div>
+
+      <nav
+        id="mobile-navigation"
+        className={`mobile-nav${open ? " is-open" : ""}`}
+        aria-label="ניווט בנייד"
+        aria-hidden={!open}
+      >
+        {NAVIGATION.map((item) =>
+          item.href.startsWith("/#") ? (
+            <a key={item.href} href={item.href} tabIndex={open ? 0 : -1}>{item.label}</a>
+          ) : (
+            <Link key={item.href} to={item.href} tabIndex={open ? 0 : -1}>{item.label}</Link>
+          )
+        )}
+      </nav>
     </header>
   );
 }

@@ -1,5 +1,6 @@
 import { SERVICES, type Service } from "./content/services";
 import { OFFERS, type Offer } from "./content/offers";
+import { ARTICLES, type Article, articlePath } from "./content/articles";
 
 /** One route per service, at `/${slug}`. */
 export const SERVICE_ROUTES: { path: string; service: Service }[] = SERVICES.map(
@@ -12,9 +13,24 @@ export const OFFER_ROUTES: { path: string; offer: Offer }[] = OFFERS.map((offer)
   offer,
 }));
 
-/** Every prerendered path — the build walks this list. */
-export const ALL_PATHS: string[] = [
+export const BLOG_INDEX_PATH = "/blog";
+
+export const ARTICLE_ROUTES: { path: string; article: Article }[] = ARTICLES.map((article) => ({
+  path: articlePath(article),
+  article,
+}));
+
+/** Public, canonical paths that belong in the sitemap. */
+export const INDEXABLE_PATHS: string[] = [
   "/",
   ...SERVICE_ROUTES.map((r) => r.path),
   ...OFFER_ROUTES.map((r) => r.path),
+  BLOG_INDEX_PATH,
+  ...ARTICLE_ROUTES.map((r) => r.path),
 ];
+
+/** Build targets include the 404 document, but the sitemap does not. */
+export const PRERENDER_PATHS = [...INDEXABLE_PATHS, "/404"];
+
+/** Backward-compatible name used by existing tests and build code. */
+export const ALL_PATHS = INDEXABLE_PATHS;

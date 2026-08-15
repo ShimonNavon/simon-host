@@ -18,18 +18,18 @@ export default function WhatsAppCTA({
   campaign?: string;
 }) {
   return (
-    <div className="bg-white border border-[#e8e2d6] rounded-2xl p-6 sm:p-10 text-center">
+    <div className="whatsapp-cta">
       <WhatsAppButton
         message={message}
         label={label}
         campaign={campaign}
-        className="text-lg block w-full sm:inline-block sm:w-auto !px-5 sm:!px-8"
+        className="text-lg"
       />
-      <p className="text-ink-soft mt-5">
+      <p>
         או פשוט תשמרו את המספר:{" "}
         <a
           href={`tel:+${WHATSAPP_NUMBER}`}
-          className="font-bold text-sea whitespace-nowrap"
+          className="phone-link"
           dir="ltr"
         >
           {WHATSAPP_DISPLAY}

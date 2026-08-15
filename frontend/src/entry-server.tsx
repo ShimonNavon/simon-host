@@ -11,7 +11,8 @@ import { StaticRouter } from "react-router-dom";
 import App from "./App";
 import { routeMeta, structuredData } from "./content/seo";
 
-export { ALL_PATHS } from "./routes";
+export { INDEXABLE_PATHS, PRERENDER_PATHS } from "./routes";
+export { articleFeedItems, routeLastModified } from "./content/seo";
 
 export function render(path: string) {
   return {
