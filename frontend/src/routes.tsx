@@ -25,6 +25,7 @@ export const INDEXABLE_PATHS: string[] = [
   "/",
   ...SERVICE_ROUTES.map((r) => r.path),
   ...OFFER_ROUTES.map((r) => r.path),
+  "/work",
   BLOG_INDEX_PATH,
   ...ARTICLE_ROUTES.map((r) => r.path),
 ];

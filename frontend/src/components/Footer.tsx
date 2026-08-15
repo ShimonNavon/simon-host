@@ -21,6 +21,7 @@ export default function Footer() {
             <strong>מידע</strong>
             <Link to="/launch">מרעיון למוצר</Link>
             <Link to="/websites">אתר לעסק</Link>
+            <Link to="/work">עבודות נבחרות</Link>
             <Link to="/blog">מדריכים</Link>
             <a href="/#about">סיימון נבון</a>
           </nav>

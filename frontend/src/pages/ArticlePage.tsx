@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import ArticleCta from "../components/article/ArticleCta";
 import AuthorBox from "../components/article/AuthorBox";
+import ProjectFacts from "../components/ProjectFacts";
 import { ARTICLES, articlePath, type Article } from "../content/articles";
+import { findProject } from "../content/portfolio";
 
 const DATE_FORMATTER = new Intl.DateTimeFormat("he-IL", {
   day: "numeric",
@@ -10,7 +12,10 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("he-IL", {
 });
 
 export default function ArticlePage({ article }: { article: Article }) {
-  const related = ARTICLES.filter((candidate) => candidate.slug !== article.slug).slice(0, 3);
+  const project = article.projectSlug ? findProject(article.projectSlug) : undefined;
+  const related = ARTICLES.filter(
+    (candidate) => candidate.slug !== article.slug && candidate.kind === article.kind
+  ).slice(0, 3);
 
   return (
     <main>
@@ -19,7 +24,7 @@ export default function ArticlePage({ article }: { article: Article }) {
           <nav aria-label="פירורי לחם">
             <Link to="/">ראשי</Link>
             <span aria-hidden="true">/</span>
-            <Link to="/blog">מדריכים</Link>
+            <Link to="/blog">{article.kind === "case-study" ? "סיפורי פרויקטים" : "מדריכים"}</Link>
           </nav>
           <p className="section-kicker rise rise-1">{article.category}</p>
           <h1 className="rise rise-2">{article.title}</h1>
@@ -31,9 +36,26 @@ export default function ArticlePage({ article }: { article: Article }) {
             </time>
             <span>{article.readingMinutes} דקות קריאה</span>
           </div>
+          {project && (
+            <figure className="article-project-proof rise rise-4">
+              <img src={project.image} alt={project.imageAlt} width={720} height={480} />
+              <figcaption>
+                <span>{project.name} · צילום מהעמוד הציבורי</span>
+                <span>
+                  {project.url && (
+                    <a href={project.url} target="_blank" rel="noopener noreferrer">לאתר החי ↗</a>
+                  )}
+                  {project.githubUrl && (
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">לקוד הציבורי ↗</a>
+                  )}
+                </span>
+              </figcaption>
+            </figure>
+          )}
         </header>
 
         <div className="article-body">
+          {project && <ProjectFacts project={project} />}
           {article.sections.map((section) => (
             <section key={section.heading}>
               <h2>{section.heading}</h2>
@@ -66,7 +88,7 @@ export default function ArticlePage({ article }: { article: Article }) {
 
       <section className="related-articles section-shell" aria-labelledby="related-heading">
         <div className="content-width">
-          <p className="section-kicker">עוד מדריכים</p>
+          <p className="section-kicker">{article.kind === "case-study" ? "עוד סיפורי בנייה" : "עוד מדריכים"}</p>
           <h2 id="related-heading">להמשיך לקרוא</h2>
           <div>
             {related.map((candidate) => (

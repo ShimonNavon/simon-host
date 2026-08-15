@@ -4,8 +4,10 @@ import { routeMeta, structuredData } from "../seo";
 import { INDEXABLE_PATHS, PRERENDER_PATHS } from "../../routes";
 
 describe("editorial content", () => {
-  it("ships six distinct, substantial search-intent guides", () => {
-    expect(ARTICLES).toHaveLength(6);
+  it("ships six guides and six substantial project stories", () => {
+    expect(ARTICLES).toHaveLength(12);
+    expect(ARTICLES.filter((article) => article.kind === "guide")).toHaveLength(6);
+    expect(ARTICLES.filter((article) => article.kind === "case-study")).toHaveLength(6);
     expect(new Set(ARTICLES.map((article) => article.slug)).size).toBe(ARTICLES.length);
 
     for (const article of ARTICLES) {
@@ -26,6 +28,11 @@ describe("editorial content", () => {
     for (const article of ARTICLES) expect(INDEXABLE_PATHS).toContain(articlePath(article));
     expect(INDEXABLE_PATHS).not.toContain("/404");
     expect(PRERENDER_PATHS).toContain("/404");
+  });
+
+  it("connects every project story to a known portfolio project", () => {
+    const projectStories = ARTICLES.filter((article) => article.kind === "case-study");
+    expect(projectStories.every((article) => article.projectSlug)).toBe(true);
   });
 
   it("publishes complete metadata and connected article schema", () => {

@@ -117,9 +117,9 @@ const feedItems = articleFeedItems();
 const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>המדריכים של Simon Host</title>
+    <title>המדריכים וסיפורי הבנייה של Simon Host</title>
     <link>${SITE_URL}/blog</link>
-    <description>מדריכים מעשיים על אחסון, וורדפרס, שרתים ואפליקציות.</description>
+    <description>מדריכים מעשיים וסיפורי בנייה על אחסון, אתרים, שרתים ואפליקציות.</description>
     <language>he-IL</language>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
 ${feedItems

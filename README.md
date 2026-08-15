@@ -9,10 +9,10 @@ An independent hosting company sold as four rungs of one ladder: *how much do yo
 ## Highlights
 
 - **One axis, four products** — the site is organised around a single involvement bar: solid orange is my share of the work, hatched is yours. It recurs in the hero as a descending staircase, in the pricing grid, and on every landing page, so the product line explains itself before a word is read.
-- **Seven prerendered pages** — the homepage, a landing page per service (`/wordpress`, `/websites`, `/apps`, `/vps`) and two offer pages (`/agencies`, `/launch`), each emitted as complete static HTML with its own title, canonical, Open Graph tags (per-page `og:image` + alt) and Service/FAQ structured data, plus a generated sitemap. React Router hydrates on top for client-side navigation.
+- **Twenty-one prerendered pages** — the homepage, service and offer pages, a sixteen-project work library, a blog index, six practical guides and six project case studies. Every route is emitted as complete static HTML with its own title, canonical, Open Graph tags and connected structured data, plus generated sitemap and RSS files. React Router hydrates on top for client-side navigation.
 - **Priced against the actual market** — the Israeli VPS field runs ₪89–₪175 for a comparable box; shared hosting runs ₪25–₪99 without anyone building the site. Each plan states what the alternative costs, on the page.
 - **Zero-friction funnel** — every CTA is a WhatsApp deep link carrying a pre-filled, plan-specific message, so an inquiry identifies which rung it came from with no form, no account, and no backend round-trip.
-- **Content as data** — the four services live in one typed module (`frontend/src/content/services.ts`), each carrying its homepage card and its whole landing page; the two offers (`offers.ts`), community and portfolio have modules of their own. Changing a price or a bullet is a one-line edit, not a JSX hunt — and a vitest suite (run in CI) enforces completeness and the launch gates.
+- **Content as data** — services, offers, articles and all sixteen projects live in typed content modules. The project records connect homepage features, `/work`, screenshots, case studies, public code links and SEO schema without duplicating facts. A vitest suite (run in CI) enforces completeness and privacy rules.
 - **Domain search on the homepage** — type a business name (Hebrew works) and get live availability across co.il/com/net/io from ISOC-IL whois and RDAP; a free domain ends in a WhatsApp button pre-filled with it.
 - **Full-stack TypeScript + Python** — React 19 + Vite + TypeScript frontend; Django + DRF backend with `leads` (the CRM), `domains` (availability lookups) and `events` (WhatsApp click analytics) apps.
 - **Hardened by default** — API rate-limiting, CSRF protection, secrets in `.env`, containers bound to localhost only behind host nginx + Cloudflare Tunnel.
@@ -29,6 +29,9 @@ An independent hosting company sold as four rungs of one ladder: *how much do yo
 | `/vps` | Private server — ₪79/mo | `services.ts` |
 | `/agencies` | Offer A: agencies overpaying for hosting — free bill audit, one site migrated free for 14 days, no invoice until every site is live | `offers.ts` |
 | `/launch` | Offer B: 30 days from idea to launched product — free written build plan, "keep building until live" guarantee | `offers.ts` |
+| `/work` | Sixteen verified projects in four editorial chapters, with live links and privacy-safe screenshots | `portfolio.ts` |
+| `/blog` | Six search-intent guides and six project case studies | `articles.ts` |
+| `/blog/:slug` | Prerendered guide or case study with BlogPosting and breadcrumb schema | `articles.ts`, `portfolio.ts` |
 
 ## Launch gates
 
@@ -37,7 +40,8 @@ Content the site ships without until Simon supplies or approves it. Each gate is
 | Gate | Where | Off means |
 |---|---|---|
 | `COMMUNITY.groupLink` | `content/community.ts` | Join-group CTA is not rendered |
-| `PORTFOLIO` `kind: "client"` entries | `content/portfolio.ts` | Only own projects ship; client demos need written OK |
+| Private project repository links | `content/portfolio.ts` | A private record may link its public site, but never its repository; tests enforce the rule |
+| Project screenshots | `public/projects/` | Only public, logged-out pages or already-public repository artwork are captured; no dashboards or customer data |
 | `CASE_STUDY_APPROVED` | `content/offers.ts` | The agency story states no figures at all — no account counts, no bills, no percentages — until the anonymized case is approved |
 | `CAPACITY_PER_MONTH` | `content/offers.ts` | The agency scarcity line says "a limited number of migrations a month" instead of a real number; set it to the true capacity to publish it |
 | `HAS_PHOTO` | `components/About.tsx` | About section renders without a photo |

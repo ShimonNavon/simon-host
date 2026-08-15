@@ -1,6 +1,7 @@
 import { QUESTIONS } from "../components/Faq";
 import { ARTICLES, findArticle, articlePath, type Article } from "./articles";
 import { OFFERS, type Offer } from "./offers";
+import { PORTFOLIO, findProject, projectPath } from "./portfolio";
 import { SERVICES, WHATSAPP_NUMBER, type Service } from "./services";
 import { FOUNDER, SITE } from "./site";
 
@@ -8,7 +9,7 @@ export const SITE_URL = SITE.url;
 export const SITE_NAME = SITE.name;
 export const SITE_DESCRIPTION = SITE.description;
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og.png`;
-export const SITE_UPDATED = "2026-08-15";
+export const SITE_UPDATED = "2026-08-16";
 
 export type RouteMeta = {
   title: string;
@@ -18,7 +19,7 @@ export type RouteMeta = {
   robots: string;
   ogImage: string;
   ogImageAlt: string;
-  pageType: "website" | "service" | "blog" | "article" | "not-found";
+  pageType: "website" | "service" | "blog" | "work" | "article" | "not-found";
   published?: string;
   modified: string;
 };
@@ -81,11 +82,12 @@ export function routeMeta(path: string): RouteMeta {
 
   const article = findArticle(normalized);
   if (article) {
+    const project = article.projectSlug ? findProject(article.projectSlug) : undefined;
     return baseMeta(normalized, {
       title: `${article.title} | Simon Host`,
       description: article.description,
-      ogImage: DEFAULT_OG_IMAGE,
-      ogImageAlt: `${article.title} — מדריך של Simon Host`,
+      ogImage: project ? `${SITE_URL}${project.image}` : DEFAULT_OG_IMAGE,
+      ogImageAlt: project?.imageAlt ?? `${article.title} — מדריך של Simon Host`,
       pageType: "article",
       published: article.published,
       modified: article.modified,
@@ -94,12 +96,23 @@ export function routeMeta(path: string): RouteMeta {
 
   if (normalized === "/blog") {
     return baseMeta(normalized, {
-      title: "מדריכי אחסון, וורדפרס ושרתים | Simon Host",
+      title: "מדריכי אחסון וסיפורי בניית מוצרים | Simon Host",
       description:
-        "מדריכים מעשיים בעברית על אחסון וורדפרס, העברת אתרים, ריסלר cPanel, שרתי VPS והעלאת אפליקציות לפרודקשן.",
+        "מדריכים מעשיים בעברית על אחסון, אתרים ושרתים, לצד מקרי בוחן על בניית אפליקציות, קהילות ומוצרים עם React, Django ו-PostgreSQL.",
       ogImage: DEFAULT_OG_IMAGE,
-      ogImageAlt: "המדריכים של Simon Host — אחסון, אתרים ואפליקציות",
+      ogImageAlt: "המדריכים וסיפורי הפרויקטים של Simon Host",
       pageType: "blog",
+    });
+  }
+
+  if (normalized === "/work") {
+    return baseMeta(normalized, {
+      title: "פרויקטים, אפליקציות ואתרים שבניתי | Simon Host",
+      description:
+        "16 פרויקטים אמיתיים של סיימון נבון: אפליקציות React ו-Django, קהילות, אתרי עסקים, מסחר ותשתיות — עם צילומים וקישורים חיים.",
+      ogImage: `${SITE_URL}/projects/bama.webp`,
+      ogImageAlt: "פרויקטים נבחרים שבנה סיימון נבון — Simon Host",
+      pageType: "work",
     });
   }
 
@@ -189,7 +202,7 @@ function webSite() {
 
 function webPage(meta: RouteMeta) {
   return {
-    "@type": meta.pageType === "blog" ? "CollectionPage" : "WebPage",
+    "@type": meta.pageType === "blog" || meta.pageType === "work" ? "CollectionPage" : "WebPage",
     "@id": `${meta.canonical}#webpage`,
     url: meta.canonical,
     name: meta.title,
@@ -254,6 +267,7 @@ function offerNode(offer: Offer) {
 }
 
 function blogPosting(article: Article, meta: RouteMeta) {
+  const project = article.projectSlug ? findProject(article.projectSlug) : undefined;
   return {
     "@type": "BlogPosting",
     "@id": `${meta.canonical}#article`,
@@ -268,6 +282,39 @@ function blogPosting(article: Article, meta: RouteMeta) {
     keywords: article.keywords.join(", "),
     author: { "@id": `${SITE_URL}/#founder` },
     publisher: { "@id": `${SITE_URL}/#business` },
+    ...(project && {
+      about: {
+        "@type": "CreativeWork",
+        name: project.name,
+        description: project.summary,
+        image: `${SITE_URL}${project.image}`,
+        url: project.url ?? `${SITE_URL}/work#${project.slug}`,
+      },
+    }),
+  };
+}
+
+function workItemList(meta: RouteMeta) {
+  return {
+    "@type": "ItemList",
+    "@id": `${meta.canonical}#projects`,
+    name: "פרויקטים נבחרים של סיימון נבון",
+    numberOfItems: PORTFOLIO.length,
+    itemListElement: PORTFOLIO.map((project, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "CreativeWork",
+        name: project.name,
+        description: project.summary,
+        image: `${SITE_URL}${project.image}`,
+        url: projectPath(project)
+          ? `${SITE_URL}${projectPath(project)}`
+          : project.url ?? `${SITE_URL}/work#${project.slug}`,
+        creator: { "@id": `${SITE_URL}/#founder` },
+        ...(project.githubUrl && { sameAs: project.githubUrl }),
+      },
+    })),
   };
 }
 
@@ -324,6 +371,17 @@ export function structuredData(path: string) {
         [
           { name: "ראשי", path: "/" },
           { name: "מדריכים", path: "/blog" },
+        ],
+        meta.canonical
+      )
+    );
+  } else if (normalized === "/work") {
+    graph.push(
+      workItemList(meta),
+      breadcrumb(
+        [
+          { name: "ראשי", path: "/" },
+          { name: "עבודות", path: "/work" },
         ],
         meta.canonical
       )

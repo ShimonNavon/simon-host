@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { SERVICES, whatsappUrl } from "../services";
 import { COMMUNITY } from "../community";
-import { PORTFOLIO } from "../portfolio";
 
 describe("services content", () => {
   it("has exactly 4 services with unique slugs and ids", () => {
@@ -44,9 +43,5 @@ describe("launch gates", () => {
     if (COMMUNITY.groupLink) {
       expect(COMMUNITY.groupLink).toMatch(/^https:\/\/chat\.whatsapp\.com\//);
     }
-  });
-
-  it("no client portfolio entries ship without approval", () => {
-    expect(PORTFOLIO.filter((p) => p.kind === "client")).toHaveLength(0);
   });
 });

@@ -1,4 +1,6 @@
-import { PORTFOLIO } from "../content/portfolio";
+import { Link } from "react-router-dom";
+import { FEATURED_PROJECTS, PORTFOLIO } from "../content/portfolio";
+import ProjectRow from "./ProjectRow";
 
 export default function Portfolio() {
   return (
@@ -7,30 +9,18 @@ export default function Portfolio() {
         <div className="section-heading section-heading-row reveal">
           <div>
             <p className="section-kicker">לא הדמיות. מוצרים באוויר.</p>
-            <h2 id="portfolio-heading">דברים שבניתי ומריץ כאן עכשיו.</h2>
+            <h2 id="portfolio-heading">דברים שבניתי ושאפשר לפתוח.</h2>
           </div>
-          <p>הקוד, בסיסי הנתונים והשרתים של אותו אדם — מהרעיון עד הניטור.</p>
+          <p>האתר, השרת והדאטה מתחברים אצל אותו אדם — מהרעיון ועד התחזוקה.</p>
         </div>
         <div className="project-grid">
-          {PORTFOLIO.map((item, index) => (
-            <a
-              key={item.url}
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="project-link reveal"
-            >
-              <figure>
-                <img src={item.image} alt={item.imageAlt} width={720} height={480} loading="lazy" />
-              </figure>
-              <div>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <h3>{item.name}</h3>
-                <p>{item.blurb}</p>
-                <strong>לפתוח את המוצר ↗</strong>
-              </div>
-            </a>
+          {FEATURED_PROJECTS.map((project, index) => (
+            <ProjectRow key={project.slug} project={project} index={index + 1} compact />
           ))}
+        </div>
+        <div className="portfolio-more reveal">
+          <p>אלה ארבע דוגמאות מתוך {PORTFOLIO.length} פרויקטים ציבוריים, קהילות ומערכות.</p>
+          <Link className="btn-ghost" to="/work">לכל העבודות ←</Link>
         </div>
       </div>
     </section>

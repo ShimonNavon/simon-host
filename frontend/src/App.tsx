@@ -7,6 +7,7 @@ import ServicePage from "./pages/ServicePage";
 import OfferPage from "./pages/OfferPage";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import ArticlePage from "./pages/ArticlePage";
+import WorkPage from "./pages/WorkPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { ARTICLE_ROUTES, BLOG_INDEX_PATH, OFFER_ROUTES, SERVICE_ROUTES } from "./routes";
 import { routeMeta, structuredData } from "./content/seo";
@@ -89,6 +90,7 @@ export default function App() {
           <Route key={path} path={path} element={<OfferPage offer={offer} />} />
         ))}
         <Route path={BLOG_INDEX_PATH} element={<BlogIndexPage />} />
+        <Route path="/work" element={<WorkPage />} />
         {ARTICLE_ROUTES.map(({ path, article }) => (
           <Route key={path} path={path} element={<ArticlePage article={article} />} />
         ))}
