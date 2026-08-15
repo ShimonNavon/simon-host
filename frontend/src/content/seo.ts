@@ -5,6 +5,7 @@
  * route at build time.
  */
 import { SERVICES, type Service } from "./services";
+import { OFFERS, type Offer } from "./offers";
 import { QUESTIONS } from "../components/Faq";
 
 export const SITE_URL = "https://simonhost.navonsimon.com";
@@ -14,21 +15,61 @@ export const SITE_NAME = "Simon Host";
 export const SITE_DESCRIPTION =
   "אחסון וורדפרס מנוהל ב־49 ₪, אתר לעסק ב־99 ₪, אפליקציה עם בסיס נתונים ב־149 ₪, או שרת פרטי ב־79 ₪ לחודש. מחיר קבוע, בלי דמי הקמה, ומענה אנושי בוואטסאפ.";
 
-export type RouteMeta = { title: string; description: string; path: string };
+/** The one shared preview image until a page brings its own. */
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og.png`;
+
+export type RouteMeta = {
+  title: string;
+  description: string;
+  path: string;
+  /** Absolute URL of the Open Graph image for this route. */
+  ogImage: string;
+  /** Per-page alt text for that image — never the same sentence on every page. */
+  ogImageAlt: string;
+};
+
+/** "/agencies/" (as nginx serves it) and "/agencies" are the same page. */
+function normalize(path: string): string {
+  return path.length > 1 ? path.replace(/\/+$/, "") : path;
+}
 
 function findService(path: string): Service | undefined {
-  return SERVICES.find((s) => `/${s.slug}` === path);
+  const p = normalize(path);
+  return SERVICES.find((s) => `/${s.slug}` === p);
+}
+
+function findOffer(path: string): Offer | undefined {
+  const p = normalize(path);
+  return OFFERS.find((o) => `/${o.slug}` === p);
 }
 
 export function routeMeta(path: string): RouteMeta {
   const service = findService(path);
   if (service) {
-    return { title: service.seo.title, description: service.seo.description, path };
+    return {
+      title: service.seo.title,
+      description: service.seo.description,
+      path,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: `Simon Host — ${service.name}, ${service.price} ₪ לחודש`,
+    };
+  }
+  const offer = findOffer(path);
+  if (offer) {
+    return {
+      title: offer.seo.title,
+      description: offer.seo.description,
+      path,
+      ogImage: offer.ogImage ? `${SITE_URL}${offer.ogImage}` : DEFAULT_OG_IMAGE,
+      ogImageAlt: offer.ogImageAlt,
+    };
   }
   return {
     title: "Simon Host — אחסון אתרים, וורדפרס, אפליקציות ושרתים בישראל",
     description: SITE_DESCRIPTION,
     path: "/",
+    ogImage: DEFAULT_OG_IMAGE,
+    ogImageAlt: "Simon Host — אתר לעסק, וורדפרס, אפליקציה, שרת פרטי",
   };
 }
 
@@ -105,15 +146,50 @@ function serviceNode(service: Service) {
   };
 }
 
+/**
+ * An offer landing page is a Service too — one without a fixed price, since
+ * the price is set per audit / per build plan. Its FAQ is its own.
+ */
+function offerNode(page: Offer) {
+  const pageUrl = `${SITE_URL}/${page.slug}`;
+  return {
+    "@type": "Service",
+    "@id": `${pageUrl}#service`,
+    name: page.name,
+    description: page.seo.description,
+    url: pageUrl,
+    provider: { "@id": `${SITE_URL}/#business` },
+    areaServed: { "@type": "Country", name: "IL" },
+  };
+}
+
 export function structuredData(path: string) {
   const service = findService(path);
-  const graph = service
-    ? [
+  if (service) {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
         serviceNode(service),
         business(),
         webSite(),
         faqPage(`${SITE_URL}/${service.slug}#faq`, service.faq),
-      ]
-    : [business(), webSite(), faqPage(`${SITE_URL}/#faq`, QUESTIONS)];
-  return { "@context": "https://schema.org", "@graph": graph };
+      ],
+    };
+  }
+  const page = findOffer(path);
+  if (page) {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        offerNode(page),
+        business(),
+        webSite(),
+        faqPage(`${SITE_URL}/${page.slug}#faq`, page.faq),
+      ],
+    };
+  }
+  return {
+    "@context": "https://schema.org",
+    "@graph": [business(), webSite(), faqPage(`${SITE_URL}/#faq`, QUESTIONS)],
+  };
 }

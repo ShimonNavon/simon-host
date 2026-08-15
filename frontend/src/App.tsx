@@ -4,7 +4,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import ServicePage from "./pages/ServicePage";
-import { SERVICE_ROUTES } from "./routes";
+import OfferPage from "./pages/OfferPage";
+import { OFFER_ROUTES, SERVICE_ROUTES } from "./routes";
 import { routeMeta } from "./content/seo";
 
 /**
@@ -30,6 +31,9 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         {SERVICE_ROUTES.map(({ path, service }) => (
           <Route key={path} path={path} element={<ServicePage service={service} />} />
+        ))}
+        {OFFER_ROUTES.map(({ path, offer }) => (
+          <Route key={path} path={path} element={<OfferPage offer={offer} />} />
         ))}
         <Route path="*" element={<HomePage />} />
       </Routes>

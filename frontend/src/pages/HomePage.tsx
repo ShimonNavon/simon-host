@@ -6,6 +6,7 @@ import Faq from "../components/Faq";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
 import Infrastructure from "../components/Infrastructure";
+import OfferStrip from "../components/OfferStrip";
 import Portfolio from "../components/Portfolio";
 import PricingGrid from "../components/PricingGrid";
 
@@ -24,6 +25,7 @@ export default function HomePage() {
       </div>
 
       <PricingGrid />
+      <OfferStrip />
 
       <Infrastructure />
       <About />

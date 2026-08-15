@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { SERVICES } from "../content/services";
+import { OFFERS } from "../content/offers";
 
 export default function Header() {
   return (
@@ -12,6 +13,16 @@ export default function Header() {
           {SERVICES.map((service) => (
             <Link key={service.id} to={`/${service.slug}`} className="hover:text-jaffa">
               {service.name}
+            </Link>
+          ))}
+          <span className="hidden lg:block w-px h-4 bg-[#e8e2d6]" aria-hidden="true" />
+          {OFFERS.map((offer) => (
+            <Link
+              key={offer.id}
+              to={`/${offer.slug}`}
+              className="hidden lg:inline text-jaffa hover:text-jaffa-dark"
+            >
+              {offer.navLabel}
             </Link>
           ))}
         </nav>

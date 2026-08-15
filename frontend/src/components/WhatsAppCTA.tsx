@@ -4,13 +4,25 @@ import WhatsAppButton from "./WhatsAppButton";
 const GENERAL_MESSAGE =
   "היי סיימון, הגעתי מהאתר ואשמח להתייעץ איתך על מה שמתאים לי.";
 
-export default function WhatsAppCTA() {
+/**
+ * The closing card. By default it carries the general "help me choose"
+ * message; a page with one explicit ask (the offer pages) passes its own.
+ */
+export default function WhatsAppCTA({
+  message = GENERAL_MESSAGE,
+  label = "שלחו לי הודעה בוואטסאפ",
+  campaign = "contact",
+}: {
+  message?: string;
+  label?: string;
+  campaign?: string;
+}) {
   return (
     <div className="bg-white border border-[#e8e2d6] rounded-2xl p-6 sm:p-10 text-center">
       <WhatsAppButton
-        message={GENERAL_MESSAGE}
-        label="שלחו לי הודעה בוואטסאפ"
-        campaign="contact"
+        message={message}
+        label={label}
+        campaign={campaign}
         className="text-lg block w-full sm:inline-block sm:w-auto !px-5 sm:!px-8"
       />
       <p className="text-ink-soft mt-5">
