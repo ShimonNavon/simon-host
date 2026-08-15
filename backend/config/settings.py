@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "leads",
     "domains",
+    "events",
 ]
 
 MIDDLEWARE = [
@@ -101,5 +102,6 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "leads": "20/hour",
         "domains": "60/hour",
+        "events": "120/hour",
     },
 }
