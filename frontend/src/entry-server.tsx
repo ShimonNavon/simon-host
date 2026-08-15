@@ -12,6 +12,7 @@ import App from "./App";
 import { routeMeta, structuredData } from "./content/seo";
 
 export { ALL_PATHS } from "./routes";
+export { rssXml, lastmodFor } from "./content/blog/rss";
 
 export function render(path: string) {
   return {

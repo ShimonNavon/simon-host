@@ -209,3 +209,40 @@ h3 {
 .faq-item[open] summary::after {
   content: "−";
 }
+
+/* ── Blog article body ────────────────────────────────────────── */
+.article-body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+.article-body section + section {
+  margin-top: 2.5rem;
+}
+.article-body h2 {
+  font-size: 1.75rem;
+  color: var(--color-sea);
+  margin-bottom: 0.9rem;
+}
+.article-body p + p,
+.article-body p + ul,
+.article-body p + ol,
+.article-body ul + p,
+.article-body ol + p {
+  margin-top: 1.1rem;
+}
+.article-body .article-ul,
+.article-body .article-ol {
+  padding-inline-start: 1.4rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.article-body .article-ul {
+  list-style: disc;
+}
+.article-body .article-ol {
+  list-style: decimal;
+}
+.article-body li::marker {
+  color: var(--color-jaffa);
+  font-weight: 700;
+}

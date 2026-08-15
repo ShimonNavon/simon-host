@@ -8,6 +8,15 @@ import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "../content/services";
  */
 const HAS_PHOTO = false;
 
+/**
+ * The only words the site says about Simon. The blog's author box renders
+ * these same constants, so no page can ever claim more than this section.
+ */
+export const ABOUT_NAME = "סיימון נבון.";
+export const ABOUT_CREDENTIAL = "בוגר אוניברסיטת הרווארד.";
+export const ABOUT_BODY =
+  "מי שבונה את התשתית הוא גם מי שעונה לך בוואטסאפ. אין מוקד, אין נציגים, אין ״הפנייה שלך התקבלה״ — יש בן־אדם אחד שמכיר את השרת שלך בשמו, ועונה גם בפעם החמישית באותו סבלנות.";
+
 export default function About() {
   return (
     <section id="about" className="py-20 scroll-mt-16">
@@ -25,13 +34,9 @@ export default function About() {
         <div>
           <p className="font-bold text-jaffa mb-3">מי מאחורי זה</p>
           <h2 className="text-3xl sm:text-4xl text-sea mb-4">
-            סיימון נבון. <span className="marker">בוגר אוניברסיטת הרווארד.</span>
+            {ABOUT_NAME} <span className="marker">{ABOUT_CREDENTIAL}</span>
           </h2>
-          <p className="text-ink-soft max-w-2xl">
-            מי שבונה את התשתית הוא גם מי שעונה לך בוואטסאפ. אין מוקד, אין נציגים,
-            אין ״הפנייה שלך התקבלה״ — יש בן־אדם אחד שמכיר את השרת שלך בשמו, ועונה
-            גם בפעם החמישית באותו סבלנות.
-          </p>
+          <p className="text-ink-soft max-w-2xl">{ABOUT_BODY}</p>
           <p className="text-ink-soft mt-4">
             <span className="font-bold text-sea">וואטסאפ:</span>{" "}
             <a

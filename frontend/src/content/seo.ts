@@ -7,6 +7,8 @@
 import { SERVICES, type Service } from "./services";
 import { OFFERS, type Offer } from "./offers";
 import { QUESTIONS } from "../components/Faq";
+import { ARTICLES, findArticle } from "./blog/articles";
+import type { Article } from "./blog/types";
 
 export const SITE_URL = "https://simonhost.navonsimon.com";
 
@@ -26,7 +28,17 @@ export type RouteMeta = {
   ogImage: string;
   /** Per-page alt text for that image — never the same sentence on every page. */
   ogImageAlt: string;
+  /** og:type — "article" for blog posts, "website" everywhere else. */
+  ogType: "website" | "article";
 };
+
+/** The author line on every article; the About section's own words, nothing added. */
+export const AUTHOR_NAME = "סיימון נבון";
+
+export const BLOG_INDEX_TITLE = "הבלוג — העברת אתרים, אחסון ושרתים | Simon Host";
+export const BLOG_INDEX_DESCRIPTION =
+  "מה שלמדתי מהעברת אתרי וורדפרס, קריאת חשבוניות אחסון ותפעול שרתים — כתוב בעברית, מהשטח, בגוף ראשון.";
+export const BLOG_INDEX_OG_ALT = "Simon Host — הבלוג: העברת אתרים, אחסון ושרתים";
 
 /** "/agencies/" (as nginx serves it) and "/agencies" are the same page. */
 function normalize(path: string): string {
@@ -43,6 +55,15 @@ function findOffer(path: string): Offer | undefined {
   return OFFERS.find((o) => `/${o.slug}` === p);
 }
 
+function isBlogIndex(path: string): boolean {
+  return normalize(path) === "/blog";
+}
+
+function findBlogArticle(path: string): Article | undefined {
+  const m = normalize(path).match(/^\/blog\/([^/]+)$/);
+  return m ? findArticle(m[1]) : undefined;
+}
+
 export function routeMeta(path: string): RouteMeta {
   const service = findService(path);
   if (service) {
@@ -52,6 +73,7 @@ export function routeMeta(path: string): RouteMeta {
       path,
       ogImage: DEFAULT_OG_IMAGE,
       ogImageAlt: `Simon Host — ${service.name}, ${service.price} ₪ לחודש`,
+      ogType: "website",
     };
   }
   const offer = findOffer(path);
@@ -62,6 +84,28 @@ export function routeMeta(path: string): RouteMeta {
       path,
       ogImage: offer.ogImage ? `${SITE_URL}${offer.ogImage}` : DEFAULT_OG_IMAGE,
       ogImageAlt: offer.ogImageAlt,
+      ogType: "website",
+    };
+  }
+  const article = findBlogArticle(path);
+  if (article) {
+    return {
+      title: `${article.title} | Simon Host`,
+      description: article.description,
+      path: `/blog/${article.slug}`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: `Simon Host — ${article.title}`,
+      ogType: "article",
+    };
+  }
+  if (isBlogIndex(path)) {
+    return {
+      title: BLOG_INDEX_TITLE,
+      description: BLOG_INDEX_DESCRIPTION,
+      path: "/blog",
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: BLOG_INDEX_OG_ALT,
+      ogType: "website",
     };
   }
   return {
@@ -70,6 +114,7 @@ export function routeMeta(path: string): RouteMeta {
     path: "/",
     ogImage: DEFAULT_OG_IMAGE,
     ogImageAlt: "Simon Host — אתר לעסק, וורדפרס, אפליקציה, שרת פרטי",
+    ogType: "website",
   };
 }
 
@@ -163,7 +208,62 @@ function offerNode(page: Offer) {
   };
 }
 
+function person() {
+  return {
+    "@type": "Person",
+    "@id": `${SITE_URL}/#simon`,
+    name: AUTHOR_NAME,
+    url: `${SITE_URL}/#about`,
+  };
+}
+
+function blogPosting(article: Article) {
+  const url = `${SITE_URL}/blog/${article.slug}`;
+  return {
+    "@type": "BlogPosting",
+    "@id": `${url}#post`,
+    headline: article.title,
+    description: article.description,
+    url,
+    mainEntityOfPage: url,
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt,
+    inLanguage: "he-IL",
+    keywords: article.tags.join(", "),
+    author: person(),
+    publisher: { "@id": `${SITE_URL}/#business` },
+    isPartOf: { "@id": `${SITE_URL}/blog#blog` },
+    image: DEFAULT_OG_IMAGE,
+  };
+}
+
+function blog() {
+  return {
+    "@type": "Blog",
+    "@id": `${SITE_URL}/blog#blog`,
+    url: `${SITE_URL}/blog`,
+    name: BLOG_INDEX_TITLE,
+    description: BLOG_INDEX_DESCRIPTION,
+    inLanguage: "he-IL",
+    publisher: { "@id": `${SITE_URL}/#business` },
+    blogPost: ARTICLES.map(blogPosting),
+  };
+}
+
 export function structuredData(path: string) {
+  const article = findBlogArticle(path);
+  if (article) {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [blogPosting(article), business(), webSite()],
+    };
+  }
+  if (isBlogIndex(path)) {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [blog(), business(), webSite()],
+    };
+  }
   const service = findService(path);
   if (service) {
     return {

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { SERVICES } from "../content/services";
 import { OFFERS } from "../content/offers";
+import { BLOG_INDEX_PATH } from "../routes";
 
 export default function Footer() {
   return (
@@ -37,6 +38,12 @@ export default function Footer() {
                   {offer.navLabel}
                 </Link>
               ))}
+              <Link to={BLOG_INDEX_PATH} className="hover:text-jaffa transition-colors">
+                בלוג
+              </Link>
+              <a href="/rss.xml" className="hover:text-jaffa transition-colors">
+                RSS
+              </a>
             </nav>
           </div>
         </div>

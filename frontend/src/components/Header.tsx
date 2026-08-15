@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { SERVICES } from "../content/services";
 import { OFFERS } from "../content/offers";
+import { BLOG_INDEX_PATH } from "../routes";
 
 export default function Header() {
   return (
@@ -25,6 +26,9 @@ export default function Header() {
               {offer.navLabel}
             </Link>
           ))}
+          <Link to={BLOG_INDEX_PATH} className="hover:text-jaffa">
+            בלוג
+          </Link>
         </nav>
         <a href="#contact" className="btn-primary !py-2 !px-4 text-sm shrink-0">
           דברו איתי
