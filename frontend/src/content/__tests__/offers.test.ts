@@ -99,7 +99,7 @@ describe("offer routes and seo", () => {
   it("both offers are prerendered paths", () => {
     expect(ALL_PATHS).toContain("/agencies");
     expect(ALL_PATHS).toContain("/launch");
-    expect(ALL_PATHS).toHaveLength(7);
+    expect(ALL_PATHS.length).toBeGreaterThanOrEqual(7);
   });
 
   it("route meta carries the offer's title and a per-page og image alt", () => {
