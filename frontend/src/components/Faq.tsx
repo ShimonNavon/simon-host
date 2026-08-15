@@ -26,14 +26,24 @@ export const QUESTIONS = [
   },
 ];
 
-export default function Faq() {
+/**
+ * The homepage's FAQ by default; hand it `questions` and a `title` and it
+ * becomes any page's — the offer pages use it with their own list.
+ */
+export default function Faq({
+  questions = QUESTIONS,
+  title = "שאלות שנשאלתי",
+}: {
+  questions?: { q: string; a: string }[];
+  title?: string;
+}) {
   return (
     <section id="faq" className="bg-sky/60 py-20 scroll-mt-16">
       <div className="max-w-3xl mx-auto px-5">
         <p className="font-bold text-jaffa mb-3">שאלות</p>
-        <h2 className="text-3xl sm:text-4xl text-sea mb-8">שאלות שנשאלתי</h2>
+        <h2 className="text-3xl sm:text-4xl text-sea mb-8">{title}</h2>
         <div className="grid gap-3">
-          {QUESTIONS.map((item) => (
+          {questions.map((item) => (
             <details key={item.q} className="faq-item">
               <summary>{item.q}</summary>
               <p className="text-ink-soft mt-3">{item.a}</p>

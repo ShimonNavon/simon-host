@@ -110,6 +110,8 @@ describe("offer routes and seo", () => {
       expect(meta.ogImage).toMatch(/^https:\/\/simonhost\.navonsimon\.com\/.+\.png$/);
       expect(meta.ogImageAlt).toBe(o.ogImageAlt);
     }
+    // A trailing slash (how nginx serves the folder) resolves to the same page.
+    expect(routeMeta("/agencies/").title).toBe(routeMeta("/agencies").title);
     // Every route has an image + alt, and alts are per page.
     const alts = ALL_PATHS.map((p) => routeMeta(p).ogImageAlt);
     expect(new Set(alts).size).toBe(ALL_PATHS.length);
@@ -117,12 +119,15 @@ describe("offer routes and seo", () => {
 
   it("structured data has a Service and a FAQPage per offer", () => {
     for (const o of OFFERS) {
-      const graph = structuredData(`/${o.slug}`)["@graph"] as { "@type": string }[];
+      const graph = structuredData(`/${o.slug}`)["@graph"] as {
+        "@type": string;
+        mainEntity?: unknown[];
+      }[];
       const types = graph.map((n) => n["@type"]);
       expect(types).toContain("Service");
       expect(types).toContain("FAQPage");
-      const faq = graph.find((n) => n["@type"] === "FAQPage") as { mainEntity: unknown[] };
-      expect(faq.mainEntity).toHaveLength(o.faq.length);
+      const faq = graph.find((n) => n["@type"] === "FAQPage");
+      expect(faq?.mainEntity).toHaveLength(o.faq.length);
     }
   });
 });

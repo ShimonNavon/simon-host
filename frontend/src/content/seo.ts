@@ -28,12 +28,19 @@ export type RouteMeta = {
   ogImageAlt: string;
 };
 
+/** "/agencies/" (as nginx serves it) and "/agencies" are the same page. */
+function normalize(path: string): string {
+  return path.length > 1 ? path.replace(/\/+$/, "") : path;
+}
+
 function findService(path: string): Service | undefined {
-  return SERVICES.find((s) => `/${s.slug}` === path);
+  const p = normalize(path);
+  return SERVICES.find((s) => `/${s.slug}` === p);
 }
 
 function findOffer(path: string): Offer | undefined {
-  return OFFERS.find((o) => `/${o.slug}` === path);
+  const p = normalize(path);
+  return OFFERS.find((o) => `/${o.slug}` === p);
 }
 
 export function routeMeta(path: string): RouteMeta {

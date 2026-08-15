@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { SERVICES } from "../content/services";
+import { OFFERS } from "../content/offers";
 
 export default function Footer() {
   return (
@@ -14,17 +15,30 @@ export default function Footer() {
               אחסון ישראלי עם בן־אדם בצד השני — וקהילה של יזמים מסביב.
             </p>
           </div>
-          <nav className="grid gap-1.5 text-sm" aria-label="מסלולים">
-            {SERVICES.map((service) => (
-              <Link
-                key={service.id}
-                to={`/${service.slug}`}
-                className="hover:text-jaffa transition-colors"
-              >
-                {service.name} · {service.price} ₪
-              </Link>
-            ))}
-          </nav>
+          <div className="flex flex-wrap gap-10">
+            <nav className="grid gap-1.5 text-sm" aria-label="מסלולים">
+              {SERVICES.map((service) => (
+                <Link
+                  key={service.id}
+                  to={`/${service.slug}`}
+                  className="hover:text-jaffa transition-colors"
+                >
+                  {service.name} · {service.price} ₪
+                </Link>
+              ))}
+            </nav>
+            <nav className="grid gap-1.5 text-sm content-start" aria-label="מסלולים מיוחדים">
+              {OFFERS.map((offer) => (
+                <Link
+                  key={offer.id}
+                  to={`/${offer.slug}`}
+                  className="hover:text-jaffa transition-colors"
+                >
+                  {offer.navLabel}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </div>
         <p className="text-sm mt-8 pt-4 border-t border-white/10">
           אתרים, אפליקציות ושרתים · © 2026

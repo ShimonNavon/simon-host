@@ -3,7 +3,8 @@
  *
  * Runs after both Vite builds: the client build produces dist/, the SSR build
  * produces dist-ssr/entry-server.js. For each route the template's head is
- * rewritten (title, description, canonical, og/twitter) and the rendered app
+ * rewritten (title, description, canonical, og/twitter incl. per-route og:image
+ * and og:image:alt) and the rendered app
  * plus its JSON-LD are injected, so a crawler landing on /wordpress reads a
  * complete WordPress-hosting page — not an empty <div id="root">.
  */
@@ -67,6 +68,13 @@ for (const path of ALL_PATHS) {
       /(<meta\s+name="twitter:description"\s+content=")[^"]*(")/,
       `$1${escapeAttr(meta.description)}$2`
     )
+    // Preview image per route: the asset may be shared, the alt never is.
+    .replace(/(<meta\s+property="og:image"\s+content=")[^"]*(")/, `$1${meta.ogImage}$2`)
+    .replace(
+      /(<meta\s+property="og:image:alt"\s+content=")[^"]*(")/,
+      `$1${escapeAttr(meta.ogImageAlt)}$2`
+    )
+    .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*(")/, `$1${meta.ogImage}$2`)
     .replace(mountPoint, `<div id="root">${html}</div>`)
     .replace("</head>", `  ${ldScript}\n  </head>`);
 
