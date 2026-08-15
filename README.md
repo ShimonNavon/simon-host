@@ -13,7 +13,8 @@ An independent hosting company sold as four rungs of one ladder: *how much do yo
 - **Priced against the actual market** — the Israeli VPS field runs ₪89–₪175 for a comparable box; shared hosting runs ₪25–₪99 without anyone building the site. Each plan states what the alternative costs, on the page.
 - **Zero-friction funnel** — every CTA is a WhatsApp deep link carrying a pre-filled, plan-specific message, so an inquiry identifies which rung it came from with no form, no account, and no backend round-trip.
 - **Content as data** — the four services live in one typed module (`frontend/src/content/services.ts`), each carrying its homepage card and its whole landing page; community and portfolio have modules of their own. Changing a price or a bullet is a one-line edit, not a JSX hunt — and a vitest suite (run in CI) enforces completeness and the launch gates.
-- **Full-stack TypeScript + Python** — React 19 + Vite + TypeScript frontend; Django + DRF backend with a `leads` app (model, serializer, validation, admin workflow) kept for the self-serve signup path.
+- **Domain search on the homepage** — type a business name (Hebrew works) and get live availability across co.il/com/net/io from ISOC-IL whois and RDAP; a free domain ends in a WhatsApp button pre-filled with it.
+- **Full-stack TypeScript + Python** — React 19 + Vite + TypeScript frontend; Django + DRF backend with `leads` (the CRM), `domains` (availability lookups) and `events` (WhatsApp click analytics) apps.
 - **Hardened by default** — API rate-limiting, CSRF protection, secrets in `.env`, containers bound to localhost only behind host nginx + Cloudflare Tunnel.
 - **Three-container topology** — frontend, backend, and Postgres 16 with healthchecks, one `docker compose up` from clean checkout to serving.
 
@@ -28,12 +29,54 @@ flowchart LR
     F -.->|plan-tagged deep link| W((WhatsApp))
 ```
 
+## Domain search
+
+`GET /api/domains/check/?q=<name>` — the `domains` app validates and
+IDNA-encodes the query (max 100 chars), fans a bare name out across
+`co.il`, `com`, `net`, `io` (a full domain checks only itself), and returns
+`available` / `taken` / `unknown` per domain. `.il` is answered by the
+ISOC-IL whois server, a fixed allowlist of global TLDs by RDAP; anything
+else is `unknown` rather than guessed. Results are cached 10 minutes;
+anonymous throttle 60/hour. The homepage `DomainSearch` section is the only
+consumer — debounced input, Hebrew status chips, and a WhatsApp CTA on
+available results.
+
+## Analytics & CRM
+
+- **`POST /api/events/`** — the `events` app records one anonymous
+  `ClickEvent` per WhatsApp click: `kind`, `page` (site path), `campaign`,
+  `utm_source/medium/campaign`, and the referrer's host only. All fields are
+  bounded, garbage is a 400, throttle 120/hour, and `text/plain` JSON is
+  accepted so `navigator.sendBeacon` works. Read-only admin at
+  `/admin/events/clickevent/` with filters by page, source, campaign and
+  date.
+- **`campaign` prop** — every `<WhatsAppButton>` names its spot on the site:
+  `hero`, `card-<slug>`, `page-<slug>`, `community-events`, `contact`,
+  `domain-search`. On click the button beacons the event (fetch keepalive
+  fallback) and never delays the navigation.
+- **utm capture** — `frontend/src/lib/utm.ts` reads `utm_source`,
+  `utm_medium`, `utm_campaign` from the landing URL once per tab into
+  `sessionStorage` (first touch; a later tagged visit overrides), and the
+  click beacon carries them along.
+- **Leads admin = CRM** — `/admin/leads/lead/` is the pipeline. `Lead` has
+  `source` (site / whatsapp / warm / cold-email / linkedin / referral /
+  other), `stage` (new → contacted → audit-sent → plan-sent → migrating →
+  won / lost), `company` and `notes`; stage and source are edited inline in
+  the list view. The public `/api/leads/` form can only create `source=site`,
+  `stage=new` rows.
+
 ## Run it
 
 ```bash
 cp .env.example .env   # fill in secrets
 docker compose up -d --build
 ```
+
+Local dev: `python manage.py runserver 127.0.0.1:8009` in `backend/`
+(`DJANGO_SQLITE=1` skips Postgres) and `npm run dev` in `frontend/` — Vite
+proxies `/api` to 8009. Tests: `npm test` in `frontend/`, and
+`DJANGO_SQLITE=1 DJANGO_SECRET_KEY=ci DJANGO_ALLOWED_HOSTS=testserver python manage.py test`
+in `backend/` (both run in CI).
 
 ---
 
