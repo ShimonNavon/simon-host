@@ -1,4 +1,5 @@
 import { whatsappUrl } from "../content/services";
+import { trackWhatsAppClick } from "../lib/track";
 
 export function WhatsAppIcon({ size = 26 }: { size?: number }) {
   return (
@@ -12,14 +13,21 @@ export function WhatsAppIcon({ size = 26 }: { size?: number }) {
 /**
  * Every CTA on the site is this button. The pre-filled `message` is what tells
  * me which rung someone came for — no form, no backend, no lost inquiry.
+ *
+ * `campaign` names the button's spot on the site (e.g. "hero",
+ * "card-wordpress", "page-vps"); on click it is beaconed to /api/events/
+ * together with the page path and any captured utm_* — without ever
+ * delaying the navigation to WhatsApp.
  */
 export default function WhatsAppButton({
   message,
   label,
+  campaign = "",
   className = "",
 }: {
   message: string;
   label: string;
+  campaign?: string;
   className?: string;
 }) {
   return (
@@ -28,6 +36,7 @@ export default function WhatsAppButton({
       target="_blank"
       rel="noopener noreferrer"
       className={`btn-primary text-center ${className}`}
+      onClick={() => trackWhatsAppClick(campaign)}
     >
       <span className="flex items-center justify-center gap-2.5">
         <WhatsAppIcon size={22} />

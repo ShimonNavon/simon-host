@@ -17,6 +17,7 @@ export default function Community() {
           <WhatsAppButton
             message={COMMUNITY.eventsWhatsapp}
             label="ספרו לי על המפגש הבא"
+            campaign="community-events"
             className="text-lg"
           />
           {COMMUNITY.groupLink && (

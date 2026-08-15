@@ -10,6 +10,7 @@ export default function WhatsAppCTA() {
       <WhatsAppButton
         message={GENERAL_MESSAGE}
         label="שלחו לי הודעה בוואטסאפ"
+        campaign="contact"
         className="text-lg block w-full sm:inline-block sm:w-auto !px-5 sm:!px-8"
       />
       <p className="text-ink-soft mt-5">

@@ -21,7 +21,12 @@ export default function Hero() {
           לקהילה של יזמים שבונים דברים.
         </p>
         <div className="rise rise-4 mt-8 flex flex-wrap gap-3">
-          <WhatsAppButton message={HERO_MESSAGE} label="דברו איתי" className="text-lg" />
+          <WhatsAppButton
+            message={HERO_MESSAGE}
+            label="דברו איתי"
+            campaign="hero"
+            className="text-lg"
+          />
           <a href="#plans" className="btn-ghost text-lg">
             למסלולים ולמחירים
           </a>

@@ -52,6 +52,7 @@ export default function PricingGrid() {
               <WhatsAppButton
                 message={service.whatsapp}
                 label={service.ctaLabel}
+                campaign={`card-${service.slug}`}
                 className="w-full text-sm !py-2.5"
               />
               <Link to={`/${service.slug}`} className="btn-ghost text-center text-sm !py-2.5">
