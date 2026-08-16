@@ -12,15 +12,17 @@ export default function Footer() {
         <div className="footer-navs">
           <nav aria-label="שירותים">
             <strong>שירותים</strong>
+            <Link to="/business-systems">מערכות לעסקים</Link>
+            <Link to="/mvp-development">פיתוח MVP</Link>
             <Link to="/agencies">אחסון לסוכנויות</Link>
             <Link to="/wordpress">WordPress מנוהל</Link>
-            <Link to="/apps">אחסון אפליקציות</Link>
-            <Link to="/vps">שרת פרטי</Link>
           </nav>
           <nav aria-label="מידע">
             <strong>מידע</strong>
-            <Link to="/launch">מרעיון למוצר</Link>
+            <Link to="/launch">מסלול השקה ב־30 יום</Link>
             <Link to="/websites">אתר לעסק</Link>
+            <Link to="/apps">אחסון אפליקציות</Link>
+            <Link to="/vps">שרת פרטי</Link>
             <Link to="/work">עבודות נבחרות</Link>
             <Link to="/blog">מדריכים</Link>
             <a href="/#about">סיימון נבון</a>

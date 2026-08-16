@@ -12,14 +12,22 @@ const PATHS = [
   },
   {
     number: "02",
-    eyebrow: "יזמים",
-    title: "רעיון בדוק לגרסה ראשונה באוויר.",
-    body: "שיחת מיקוד, תוכנית בנייה כתובה, קוד, שרת והשקה בידיים של אותו אדם.",
-    href: "/launch",
-    label: "מרעיון למוצר",
+    eyebrow: "עסקים עם תהליך ידני",
+    title: "מחברים את העבודה למערכת אחת.",
+    body: "לקוחות, תקציב, הרשאות או תהליך ייחודי — מתחילים בזרימה אחת שבאמת חוסכת עבודה.",
+    href: "/business-systems",
+    label: "לפיתוח מערכת לעסק",
   },
   {
     number: "03",
+    eyebrow: "יזמים ובעלי מוצר",
+    title: "רעיון בדוק לגרסה ראשונה באוויר.",
+    body: "מפרט קטן, זרימה שלמה, קוד, בסיס נתונים ופריסה בידיים של אותו אדם.",
+    href: "/mvp-development",
+    label: "לפיתוח MVP",
+  },
+  {
+    number: "04",
     eyebrow: "עסקים ומפתחים",
     title: "אתר, WordPress, אפליקציה או שרת.",
     body: "ארבעה מסלולים שקופים לפי כמות העבודה שאתם רוצים להשאיר אצלי.",
@@ -34,7 +42,7 @@ export default function AudiencePaths() {
       <div className="content-width">
         <div className="section-heading reveal">
           <p className="section-kicker">איפה אתם היום?</p>
-          <h2 id="audience-heading">שלושה מסלולים. אחריות אחת ברורה.</h2>
+          <h2 id="audience-heading">ארבעה מסלולים. אחריות אחת ברורה.</h2>
         </div>
         <div className="audience-paths">
           {PATHS.map((path) => (

@@ -40,7 +40,7 @@ describe("project library", () => {
 
   it("publishes indexable metadata and an ItemList for /work", () => {
     expect(INDEXABLE_PATHS).toContain("/work");
-    expect(INDEXABLE_PATHS).toHaveLength(21);
+    expect(INDEXABLE_PATHS).toHaveLength(23);
     expect(routeMeta("/work").pageType).toBe("work");
     expect(routeMeta("/work").robots).toContain("index");
     const graph = structuredData("/work")["@graph"] as { "@type": string }[];

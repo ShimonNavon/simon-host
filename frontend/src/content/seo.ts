@@ -1,6 +1,7 @@
 import { QUESTIONS } from "../components/Faq";
 import { ARTICLES, findArticle, articlePath, type Article } from "./articles";
 import { OFFERS, type Offer } from "./offers";
+import { findGrowthService, type GrowthService } from "./growthServices";
 import { PORTFOLIO, findProject, projectPath } from "./portfolio";
 import { SERVICES, WHATSAPP_NUMBER, type Service } from "./services";
 import { FOUNDER, SITE } from "./site";
@@ -76,6 +77,18 @@ export function routeMeta(path: string): RouteMeta {
       description: offer.seo.description,
       ogImage: offer.ogImage ? `${SITE_URL}${offer.ogImage}` : DEFAULT_OG_IMAGE,
       ogImageAlt: offer.ogImageAlt,
+      pageType: "service",
+    });
+  }
+
+  const growthService = findGrowthService(normalized);
+  if (growthService) {
+    const project = findProject(growthService.heroProjectSlug);
+    return baseMeta(normalized, {
+      title: growthService.seo.title,
+      description: growthService.seo.description,
+      ogImage: project ? `${SITE_URL}${project.image}` : DEFAULT_OG_IMAGE,
+      ogImageAlt: growthService.ogImageAlt,
       pageType: "service",
     });
   }
@@ -266,6 +279,24 @@ function offerNode(offer: Offer) {
   };
 }
 
+function growthServiceNode(service: GrowthService) {
+  const pageUrl = `${SITE_URL}/${service.slug}`;
+  return {
+    "@type": "Service",
+    "@id": `${pageUrl}#service`,
+    name: service.navLabel,
+    description: service.seo.description,
+    url: pageUrl,
+    provider: { "@id": `${SITE_URL}/#business` },
+    areaServed: { "@type": "Country", name: "Israel" },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: pageUrl,
+      servicePhone: `+${WHATSAPP_NUMBER}`,
+    },
+  };
+}
+
 function blogPosting(article: Article, meta: RouteMeta) {
   const project = article.projectSlug ? findProject(article.projectSlug) : undefined;
   return {
@@ -346,6 +377,21 @@ export function structuredData(path: string) {
         [
           { name: "ראשי", path: "/" },
           { name: offer.name, path: normalized },
+        ],
+        meta.canonical
+      )
+    );
+  }
+
+  const growthService = findGrowthService(normalized);
+  if (growthService) {
+    graph.push(
+      growthServiceNode(growthService),
+      faqPage(`${meta.canonical}#faq`, growthService.faq),
+      breadcrumb(
+        [
+          { name: "ראשי", path: "/" },
+          { name: growthService.navLabel, path: normalized },
         ],
         meta.canonical
       )

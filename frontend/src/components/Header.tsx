@@ -5,7 +5,7 @@ import WhatsAppButton from "./WhatsAppButton";
 
 const NAVIGATION = [
   { href: "/agencies", label: "לסוכנויות" },
-  { href: "/launch", label: "ליזמים" },
+  { href: "/business-systems", label: "פיתוח תוכנה" },
   { href: "/work", label: "עבודות" },
   { href: "/blog", label: "מדריכים" },
   { href: "/#about", label: "מי אני" },

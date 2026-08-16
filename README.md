@@ -4,12 +4,14 @@
 
 **Live:** [simonhost.navonsimon.com](https://simonhost.navonsimon.com) · Hebrew RTL
 
+**Explore:** [16 production projects](https://simonhost.navonsimon.com/work) · [Custom business systems](https://simonhost.navonsimon.com/business-systems) · [MVP development](https://simonhost.navonsimon.com/mvp-development)
+
 An independent hosting company sold as four rungs of one ladder: *how much do you want to do yourself.* A finished website at ₪99/month, managed WordPress hosting (migration included) at ₪49, your app running with a managed Postgres at ₪149, or a private server with the keys handed over at ₪79. The prices don't ascend, and that's the pitch — you pay for my time, not the hardware. Around the hosting sits a community of entrepreneurs: events, a group, and a founder who answers the WhatsApp himself.
 
 ## Highlights
 
 - **One axis, four products** — the site is organised around a single involvement bar: solid orange is my share of the work, hatched is yours. It recurs in the hero as a descending staircase, in the pricing grid, and on every landing page, so the product line explains itself before a word is read.
-- **Twenty-one prerendered pages** — the homepage, service and offer pages, a sixteen-project work library, a blog index, six practical guides and six project case studies. Every route is emitted as complete static HTML with its own title, canonical, Open Graph tags and connected structured data, plus generated sitemap and RSS files. React Router hydrates on top for client-side navigation.
+- **Twenty-three prerendered pages** — the homepage, service and offer pages, two software-development landing pages, a sixteen-project work library, a blog index, six practical guides and six project case studies. Every route is emitted as complete static HTML with its own title, canonical, Open Graph tags and connected structured data, plus generated sitemap and RSS files. React Router hydrates on top for client-side navigation.
 - **Priced against the actual market** — the Israeli VPS field runs ₪89–₪175 for a comparable box; shared hosting runs ₪25–₪99 without anyone building the site. Each plan states what the alternative costs, on the page.
 - **Zero-friction funnel** — every CTA is a WhatsApp deep link carrying a pre-filled, plan-specific message, so an inquiry identifies which rung it came from with no form, no account, and no backend round-trip.
 - **Content as data** — services, offers, articles and all sixteen projects live in typed content modules. The project records connect homepage features, `/work`, screenshots, case studies, public code links and SEO schema without duplicating facts. A vitest suite (run in CI) enforces completeness and privacy rules.
@@ -29,6 +31,8 @@ An independent hosting company sold as four rungs of one ladder: *how much do yo
 | `/vps` | Private server — ₪79/mo | `services.ts` |
 | `/agencies` | Offer A: agencies overpaying for hosting — free bill audit, one site migrated free for 14 days, no invoice until every site is live | `offers.ts` |
 | `/launch` | Offer B: 30 days from idea to launched product — free written build plan, "keep building until live" guarantee | `offers.ts` |
+| `/business-systems` | Custom business systems — workflow diagnosis, process, proof, ownership and FAQ | `growthServices.ts` |
+| `/mvp-development` | MVP development — readiness, focused build process, product proof and FAQ | `growthServices.ts` |
 | `/work` | Sixteen verified projects in four editorial chapters, with live links and privacy-safe screenshots | `portfolio.ts` |
 | `/blog` | Six search-intent guides and six project case studies | `articles.ts` |
 | `/blog/:slug` | Prerendered guide or case study with BlogPosting and breadcrumb schema | `articles.ts`, `portfolio.ts` |

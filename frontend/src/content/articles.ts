@@ -482,7 +482,7 @@ export const ARTICLES: Article[] = [
     relatedLinks: [
       { href: "/work", label: "לראות את כל הפרויקטים" },
       { href: "/apps", label: "אחסון אפליקציות ומסדי נתונים" },
-      { href: "/launch", label: "להפוך רעיון לגרסה ראשונה" },
+      { href: "/mvp-development", label: "פיתוח MVP וגרסה ראשונה" },
     ],
     cta: {
       title: "יש לכם קטלוג, קהילה או שוק שצריך להפוך למוצר?",
@@ -543,7 +543,7 @@ export const ARTICLES: Article[] = [
     ],
     relatedLinks: [
       { href: "/work", label: "לספריית העבודות" },
-      { href: "/apps", label: "תשתית לאפליקציות עם משתמשים" },
+      { href: "/business-systems", label: "פיתוח מערכת מותאמת לעסק" },
       { href: "/blog/building-bama-webinar-marketplace", label: "איך נבנה BAMA" },
     ],
     cta: {
@@ -606,7 +606,7 @@ export const ARTICLES: Article[] = [
     relatedLinks: [
       { href: "/work", label: "לכל המערכות והאתרים" },
       { href: "/apps", label: "אחסון backend ומסד נתונים" },
-      { href: "/blog/hosting-web-app-postgres", label: "צ׳קליסט להעלאת אפליקציה עם PostgreSQL" },
+      { href: "/mvp-development", label: "פיתוח MVP עם זרימת משתמש מלאה" },
     ],
     cta: {
       title: "יש לכם תהליך שטח שצריך להפוך למערכת?",
@@ -667,7 +667,7 @@ export const ARTICLES: Article[] = [
     ],
     relatedLinks: [
       { href: "/work", label: "לראות עבודות נוספות" },
-      { href: "/apps", label: "אחסון אפליקציות ומסדי נתונים" },
+      { href: "/business-systems", label: "פיתוח מערכת לעסק" },
       { href: "/blog/hosting-web-app-postgres", label: "איך מעלים מערכת עם PostgreSQL" },
     ],
     cta: {
@@ -730,7 +730,7 @@ export const ARTICLES: Article[] = [
     relatedLinks: [
       { href: "/work", label: "לגלריית הפרויקטים" },
       { href: "/launch", label: "בניית גרסה ראשונה למוצר" },
-      { href: "/apps", label: "אחסון Next.js ו־API" },
+      { href: "/mvp-development", label: "שירות פיתוח MVP" },
     ],
     cta: {
       title: "יש לכם מוצר חדש שקשה להסביר בשקף?",
@@ -792,7 +792,7 @@ export const ARTICLES: Article[] = [
     relatedLinks: [
       { href: "/work", label: "לראות את כל העבודות" },
       { href: "/websites", label: "בניית אתר לעסק" },
-      { href: "/blog/small-business-website-cost", label: "כמה עולה אתר לעסק קטן" },
+      { href: "/business-systems", label: "מערכות ותהליכים לעסקים" },
     ],
     cta: {
       title: "העסק שלכם צריך אתר שמרגיש כמו העסק?",

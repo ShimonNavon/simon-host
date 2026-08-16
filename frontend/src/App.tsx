@@ -5,11 +5,18 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import ServicePage from "./pages/ServicePage";
 import OfferPage from "./pages/OfferPage";
+import GrowthServicePage from "./pages/GrowthServicePage";
 import BlogIndexPage from "./pages/BlogIndexPage";
 import ArticlePage from "./pages/ArticlePage";
 import WorkPage from "./pages/WorkPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import { ARTICLE_ROUTES, BLOG_INDEX_PATH, OFFER_ROUTES, SERVICE_ROUTES } from "./routes";
+import {
+  ARTICLE_ROUTES,
+  BLOG_INDEX_PATH,
+  GROWTH_SERVICE_ROUTES,
+  OFFER_ROUTES,
+  SERVICE_ROUTES,
+} from "./routes";
 import { routeMeta, structuredData } from "./content/seo";
 
 /**
@@ -88,6 +95,9 @@ export default function App() {
         ))}
         {OFFER_ROUTES.map(({ path, offer }) => (
           <Route key={path} path={path} element={<OfferPage offer={offer} />} />
+        ))}
+        {GROWTH_SERVICE_ROUTES.map(({ path, service }) => (
+          <Route key={path} path={path} element={<GrowthServicePage service={service} />} />
         ))}
         <Route path={BLOG_INDEX_PATH} element={<BlogIndexPage />} />
         <Route path="/work" element={<WorkPage />} />

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { Offer } from "../content/offers";
 import Contact from "../components/Contact";
 import Faq from "../components/Faq";
@@ -22,6 +23,12 @@ export default function OfferPage({ offer }: { offer: Offer }) {
             <h1 className="rise rise-2 text-4xl sm:text-5xl text-sea">{offer.name}</h1>
             <p className="rise rise-3 mt-3 text-xl text-ink-soft">{offer.tagline}</p>
             <p className="rise rise-3 mt-6 text-lg text-ink-soft max-w-xl">{offer.heroLine}</p>
+            {offer.slug === "launch" && (
+              <p className="rise rise-4 mt-5 text-sm text-ink-soft max-w-xl">
+                רוצים קודם להבין את תהליך הפיתוח?{" "}
+                <Link to="/mvp-development" className="text-link">לשירות פיתוח MVP ←</Link>
+              </p>
+            )}
           </div>
 
           <div className="rise rise-2 bg-white text-ink rounded-2xl p-8 sm:p-10 shadow-[0_18px_50px_rgba(15,45,74,0.12)]">

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Contact from "../components/Contact";
 import ProjectRow from "../components/ProjectRow";
 import { PORTFOLIO, PROJECT_CATEGORIES } from "../content/portfolio";
@@ -21,6 +22,10 @@ export default function WorkPage() {
               כל צילום כאן מגיע מעמוד ציבורי. כשקוד או מידע שייכים ללקוח, הם נשארים פרטיים.
             </p>
           </div>
+          <nav className="work-service-links rise rise-4" aria-label="שירותי פיתוח קשורים">
+            <Link to="/business-systems">צריכים מערכת לעסק? ←</Link>
+            <Link to="/mvp-development">צריכים MVP? ←</Link>
+          </nav>
         </div>
       </section>
 
