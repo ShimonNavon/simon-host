@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { FOUNDER } from "../content/site";
+import HomeLogo from "./HomeLogo";
 
 export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="content-width">
         <div className="footer-brand">
-          <Link to="/" className="site-logo">Simon <span>Host</span></Link>
+          <HomeLogo />
           <p>אחסון, אתרים ומוצרים עם בן־אדם אחד שאחראי מהרגע הראשון.</p>
         </div>
         <div className="footer-navs">

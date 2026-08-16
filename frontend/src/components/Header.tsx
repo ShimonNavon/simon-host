@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AGENCY_AUDIT_MESSAGE } from "../content/site";
+import HomeLogo from "./HomeLogo";
 import WhatsAppButton from "./WhatsAppButton";
 
 const NAVIGATION = [
@@ -20,9 +21,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="header-inner content-width">
-        <Link to="/" className="site-logo" aria-label="Simon Host — עמוד ראשי">
-          Simon <span>Host</span>
-        </Link>
+        <HomeLogo />
 
         <nav className="desktop-nav" aria-label="ניווט ראשי">
           {NAVIGATION.map((item) =>
